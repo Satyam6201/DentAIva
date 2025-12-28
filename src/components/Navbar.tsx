@@ -16,7 +16,7 @@ function Navbar() {
         {/* LOGO */}
         <div className="flex items-center gap-8">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="DentWise Logo" width={32} height={32} className="w-11" />
+            <Image src="/logo.png" alt="DentAIva Logo" width={32} height={32} className="w-11" />
           </Link>
 
           <div className="flex items-center gap-6">
