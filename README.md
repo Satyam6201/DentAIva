@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DentAIva 🦷 — AI-Powered Dental Practice Management
 
-## Getting Started
+DentAIva is a modern SaaS platform designed to revolutionize dental clinic operations. It combines a high-performance **Next.js** frontend with an **AI Voice Assistant** to automate patient interactions, bookings, and billing.
 
-First, run the development server:
+![DentAIva Hero Section]
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🎙️ AI Voice Agent (Powered by Vapi)
+* **24/7 Virtual Receptionist**: A real-time voice agent that answers dental queries and assists in booking.
+* **Instant Advice**: Provides personalized care recommendations based on user input.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 📅 Smart Appointment System
+* **3-Step Booking Flow**: Seamless UX for selecting a Dentist → Service & Time → Confirmation.
+* **Real-time Availability**: Managed via PostgreSQL to prevent double bookings.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🔐 Secure Authentication & SaaS Features
+* **Clerk Auth**: Secure login via Google, GitHub, or Email with 6-digit verification.
+* **Subscription Tiers**: Free and Pro plans with smart logic to handle mid-cycle upgrades.
+* **Automated Billing**: Integrated invoice generation sent directly via email.
 
-## Learn More
+### 📊 Admin Dashboard
+* **Practice Overview**: Monitor total doctors, active sessions, and appointment success rates.
+* **Management Tools**: Full CRUD functionality to manage doctor profiles and schedules.
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Layer              | Technology                                                         |
+|--------------------|--------------------------------------------------------------------|
+| **Frontend** | Next.js 15 (App Router), Tailwind CSS, Shadcn UI                   |
+| **Backend** | Next.js Server Actions, Prisma ORM                                 |
+| **Database** | PostgreSQL (Neon DB)                                               |
+| **Authentication** | Clerk                                                              |
+| **AI / Voice** | Vapi AI                                                            |
+| **Email** | Resend (React Email)                                               |
+| **State Management**| TanStack Query (React Query)                                      |
+| **Deployment** | Sevalla / Vercel                                                   |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Project Structure
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+├── components/          # Reusable Shadcn & Custom UI components
+├── prisma/             # Database schema & migrations
+├── src/
+│   ├── app/            # Next.js App Router (Pages & API Routes)
+│   ├── hooks/          # Custom TanStack Query hooks
+│   ├── lib/            # Shared utilities (Prisma client, Resend config)
+├── .env                # Environment variables (Clerk, Neon, Resend, Vapi)
+└── public/             # Static assets (Hero images, logos)
