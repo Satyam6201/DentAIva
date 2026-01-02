@@ -97,5 +97,54 @@
 
 ---
 
-## 📁 Project Structure
+## 📁 Project File Structure
+
+```bash
+DENTAVIA/
+├── .clerk/                     # Clerk auth metadata
+├── .next/                      # Next.js build output
+├── node_modules/               # Dependencies
+├── prisma/                     # Prisma schema & migrations
+├── public/                     # Static assets (images, icons)
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── admin/              # Admin routes
+│   │   ├── api/                # API routes
+│   │   ├── appointments/       # Appointment pages
+│   │   ├── dashboard/          # User dashboard
+│   │   ├── pro/                # Pro subscription pages
+│   │   ├── voice/              # AI Voice (Vapi) pages
+│   │   ├── favicon.ico
+│   │   ├── globals.css         # Global styles
+│   │   ├── layout.tsx          # Root layout
+│   │   └── page.tsx            # Landing page
+│   │
+│   ├── components/             # Reusable UI components
+│   │   ├── admin/              # Admin UI components
+│   │   ├── appointments/       # Booking components
+│   │   ├── dashboard/          # Dashboard widgets
+│   │   ├── emails/             # React Email templates
+│   │   ├── landing/            # Landing page sections
+│   │   ├── providers/          # Context providers
+│   │   ├── ui/                 # Shadcn UI components
+│   │   ├── voice/              # Voice agent components
+│   │   ├── Navbar.tsx
+│   │   └── UserSync.tsx
+│   │
+│   ├── hooks/                  # Custom React hooks
+│   │   ├── use-appointment.ts
+│   │   ├── use-doctors.ts
+│   │   └── use-mobile.ts
+│   │
+│   ├── lib/                    # Core utilities & services
+│   │   ├── actions/            # Server actions
+│   │   ├── prisma.ts           # Prisma client
+│   │   ├── resend.ts           # Email (Resend) config
+│   │   ├── utils.ts            # Helper functions
+│   │   ├── vapi-prompt.ts      # Vapi AI prompts
+│   │   ├── vapi.ts             # Vapi client
+│   │   └── middleware.ts       # App middleware
+│
+├── .env                        # Environment variables
+└── package.json
 
