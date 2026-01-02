@@ -147,4 +147,20 @@ DENTAVIA/
 │
 ├── .env                        # Environment variables
 └── package.json
+```
+
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key
+CLERK_SECRET_KEY=your_key
+
+RESEND_API_KEY=your_resend_key
 
