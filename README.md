@@ -164,3 +164,13 @@ CLERK_SECRET_KEY=your_key
 
 RESEND_API_KEY=your_resend_key
 
+```
+
+# 📦Installation & Setup
+```
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
