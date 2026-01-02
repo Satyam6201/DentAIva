@@ -166,6 +166,8 @@ RESEND_API_KEY=your_resend_key
 
 ```
 
+---
+
 # 📦Installation & Setup
 ```
 # Install dependencies
@@ -174,3 +176,14 @@ npm install
 # Run development server
 npm run dev
 ```
+---
+
+# App will run on:
+```
+http://localhost:3000
+```
+---
+
+# 📧 Email Preview (React Email)
+```
+npx react-email preview
