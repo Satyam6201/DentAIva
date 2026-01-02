@@ -1,49 +1,101 @@
-# DentAIva 🦷 — AI-Powered Dental Practice Management
+<img width="1280" height="720" alt="screenshot-for-readme" src="https://github.com/user-attachments/assets/eabb064d-fb59-4d66-9a9d-29a90774a1c7" /># 🦷 DentAiva – AI Dentist SaaS (2025)
 
-DentAIva is a modern SaaS platform designed to revolutionize dental clinic operations. It combines a high-performance **Next.js** frontend with an **AI Voice Assistant** to automate patient interactions, bookings, and billing.
 
-![DentAIva Hero Section]
 
-## 🚀 Features
+> **DentAiva** is a modern **AI-Powered Dentist SaaS Platform** built to help dental clinics manage doctors, appointments, patients, and notifications with automation and AI assistance.
 
-### 🎙️ AI Voice Agent (Powered by Vapi)
-* **24/7 Virtual Receptionist**: A real-time voice agent that answers dental queries and assists in booking.
-* **Instant Advice**: Provides personalized care recommendations based on user input.
+---
 
-### 📅 Smart Appointment System
-* **3-Step Booking Flow**: Seamless UX for selecting a Dentist → Service & Time → Confirmation.
-* **Real-time Availability**: Managed via PostgreSQL to prevent double bookings.
+## ✨ Highlights
 
-### 🔐 Secure Authentication & SaaS Features
-* **Clerk Auth**: Secure login via Google, GitHub, or Email with 6-digit verification.
-* **Subscription Tiers**: Free and Pro plans with smart logic to handle mid-cycle upgrades.
-* **Automated Billing**: Integrated invoice generation sent directly via email.
+🏠 **Modern Landing Page** with gradients & images  
+🔐 **Authentication via Clerk** (Google, GitHub, Email & Password)  
+🔑 **Email Verification** (6-digit OTP)  
+📅 **Appointment Booking System**  
+🦷 **3-Step Booking Flow** (Dentist → Service & Time → Confirm)  
+📩 **Email Notifications** for bookings (Resend)  
+📊 **Admin Dashboard** for managing appointments  
+🗣️ **AI Voice Agent** powered by Vapi *(Pro plans only)*  
+💳 **Subscription Payments** with Clerk *(Free + 2 Paid Plans)*  
+🧾 **Automatic Invoices** sent via email  
+💸 **Smart Subscription Upgrades** (pay only the difference)  
+📂 **PostgreSQL** for data persistence  
+🎨 **Styling** with Tailwind CSS + Shadcn UI  
+⚡ **Data Fetching** with TanStack Query  
+🤖 **CodeRabbit** for PR optimizations  
+🧑‍💻 **Git & GitHub Workflow** (branches, PRs, merges)  
+🚀 **Deployment on Sevalla** *(free-tier friendly)*  
+
+---
+
+## 🚀 Live Features
+
+### 👨‍⚕️ Doctor Management
+- Add / Edit / Activate / Deactivate doctors
+- Doctor profiles with specialization & availability
+- Avatar generation for doctors & patients
+
+### 📅 Appointment System
+- Book, reschedule, cancel appointments
+- Appointment status tracking (Pending / Completed)
+- Real-time availability handling
+
+### 🤖 AI Assistance
+- AI-powered dental assistant UI
+- Smart appointment flow
+- Future-ready AI integrations
+
+### 📧 Email Notifications
+- Appointment confirmation emails
+- Professional HTML email templates
+- Powered by **React Email + Resend**
+
+### 🔐 Authentication & Roles
+- Secure authentication using **Clerk**
+- Role-based dashboards (Admin / Doctor / Patient)
 
 ### 📊 Admin Dashboard
-* **Practice Overview**: Monitor total doctors, active sessions, and appointment success rates.
-* **Management Tools**: Full CRUD functionality to manage doctor profiles and schedules.
+- Total doctors
+- Active doctors
+- Total appointments
+- Completed appointments
+- Beautiful analytics cards
+
+---
 
 ## 🛠️ Tech Stack
 
-| Layer              | Technology                                                         |
-|--------------------|--------------------------------------------------------------------|
-| **Frontend** | Next.js 15 (App Router), Tailwind CSS, Shadcn UI                   |
-| **Backend** | Next.js Server Actions, Prisma ORM                                 |
-| **Database** | PostgreSQL (Neon DB)                                               |
-| **Authentication** | Clerk                                                              |
-| **AI / Voice** | Vapi AI                                                            |
-| **Email** | Resend (React Email)                                               |
-| **State Management**| TanStack Query (React Query)                                      |
-| **Deployment** | Sevalla / Vercel                                                   |
+### Frontend
+- ⚛️ **React.js**
+- 🔺 **Next.js (App Router)**
+- 🎨 **Tailwind CSS**
+- 🧠 **TypeScript**
+- 🧩 **Lucide Icons**
+
+### Backend / APIs
+- 🌐 **Next.js API Routes**
+- 🔐 **Clerk Authentication**
+- 📩 **Resend (Email Service)**
+
+### Email System
+- ✉️ **@react-email/components**
+- 🎨 Custom HTML email templates
+- Email-safe image hosting
+
+### Data & State
+- 🔁 Custom React Hooks
+- 📡 API-based data fetching
+
+---
+
+## 🖼️ Image & Asset Handling
+
+- Next.js Image Optimization
+- Remote images allowed via `next.config.ts`
+- Public assets served from `/public`
+- Email-safe absolute image URLs
+
+---
 
 ## 📁 Project Structure
 
-```text
-├── components/          # Reusable Shadcn & Custom UI components
-├── prisma/             # Database schema & migrations
-├── src/
-│   ├── app/            # Next.js App Router (Pages & API Routes)
-│   ├── hooks/          # Custom TanStack Query hooks
-│   ├── lib/            # Shared utilities (Prisma client, Resend config)
-├── .env                # Environment variables (Clerk, Neon, Resend, Vapi)
-└── public/             # Static assets (Hero images, logos)
