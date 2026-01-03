@@ -1,6 +1,5 @@
-<img width="1280" height="720" alt="screenshot-for-readme" src="https://github.com/user-attachments/assets/eabb064d-fb59-4d66-9a9d-29a90774a1c7" /># 🦷 DentAiva – AI Dentist SaaS (2025)
-
-
+<img width="1280" height="720" alt="screenshot-for-readme" src="https://github.com/user-attachments/assets/eabb064d-fb59-4d66-9a9d-29a90774a1c7" /> 
+## 🦷 DentAiva – AI Dentist SaaS (2025)
 
 > **DentAiva** is a modern **AI-Powered Dentist SaaS Platform** built to help dental clinics manage doctors, appointments, patients, and notifications with automation and AI assistance.
 
