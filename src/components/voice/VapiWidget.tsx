@@ -198,13 +198,19 @@ function VapiWidget() {
           <div className="aspect-video flex flex-col items-center justify-center p-6 relative">
             {/* User Image */}
             <div className="relative size-32 mb-4">
-              <Image
-                src={user?.imageUrl!}
-                alt="User"
-                width={128}
-                height={128}
-                className="size-full object-cover rounded-full"
-              />
+              {user?.imageUrl ? (
+                <Image
+                  src={user.imageUrl}
+                  alt="User"
+                  width={128}
+                  height={128}
+                  className="size-full object-cover rounded-full"
+                />
+              ) : (
+                <div className="size-full rounded-full bg-primary/20 flex items-center justify-center text-3xl font-bold text-primary border border-primary/30">
+                  {user?.firstName?.charAt(0) || "U"}
+                </div>
+              )}
             </div>
 
             <h2 className="text-xl font-bold text-foreground">You</h2>

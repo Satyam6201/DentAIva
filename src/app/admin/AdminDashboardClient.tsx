@@ -28,28 +28,26 @@ function AdminDashboardClient() {
         <div className="min-h-screen bg-background">
             <Navbar />
 
-            <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pt-28 pb-20">
         {/* ADMIN WELCOME SECTION */}
-        <div className="mb-12 flex items-center justify-between bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-8 border border-primary/20">
-          <div className="space-y-4">
+        <div className="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gradient-to-br from-primary/15 via-primary/5 to-background rounded-3xl p-6 sm:p-8 border border-primary/20 gap-6">
+          <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-primary">Admin Dashboard</span>
+              <div className="size-2 bg-primary rounded-full animate-pulse" />
+              <span className="text-xs font-semibold text-primary uppercase tracking-wide">Hospital Practice Management</span>
             </div>
             <div>
-              <h1 className="text-4xl font-bold mb-2">
-                Welcome back, {user?.firstName || "Admin"}!
+              <h1 className="text-3xl sm:text-4xl font-extrabold mb-1 tracking-tight">
+                Welcome back, {user?.firstName || "Hospital Director"}!
               </h1>
-              <p className="text-muted-foreground">
-                Manage doctors, oversee appointments, and monitor your dental practice performance.
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                Oversee clinical operations, manage attending doctor schedules, review patient appointments, and monitor hospital throughput.
               </p>
             </div>
           </div>
 
-          <div className="hidden lg:block">
-            <div className="w-32 h-32 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
-              <SettingsIcon className="w-16 h-16 text-primary" />
-            </div>
+          <div className="hidden lg:flex items-center justify-center size-28 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl border border-primary/20 shrink-0">
+            <SettingsIcon className="size-12 text-primary" />
           </div>
         </div>
 

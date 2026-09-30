@@ -1,19 +1,46 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export function generateAvatar(name: string, gender: "MALE" | "FEMALE") {
-  const username = name.replace(/\s+/g, "").toLowerCase();
-  const base = "https://avatar.iran.liara.run/public";
-  if (gender === "FEMALE") return `${base}/girl?username=${username}`;
-  // default to boy
-  return `${base}/boy?username=${username}`;
+export const MALE_DOCTOR_AVATARS = [
+  "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=256&auto=format&fit=crop&q=80",
+];
+
+export const FEMALE_DOCTOR_AVATARS = [
+  "https://images.unsplash.com/photo-1594824813596-f94e24eb2913?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=256&auto=format&fit=crop&q=80",
+];
+
+export function generateAvatar(name: string, gender: "MALE" | "FEMALE" = "MALE") {
+  const hash = Math.abs(
+    name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  );
+  if (gender === "FEMALE") {
+    return FEMALE_DOCTOR_AVATARS[hash % FEMALE_DOCTOR_AVATARS.length];
+  }
+  return MALE_DOCTOR_AVATARS[hash % MALE_DOCTOR_AVATARS.length];
 }
 
-// phone formatting function for US numbers - ai generated 🎉
+export function getSafeAvatarUrl(
+  url?: string | null,
+  name: string = "Doctor",
+  gender: "MALE" | "FEMALE" = "MALE"
+) {
+  if (!url || url.includes("iran.liara") || url.includes("avatar.iran")) {
+    return generateAvatar(name, gender);
+  }
+  return url;
+}
+
+// phone formatting function for US numbers
 export const formatPhoneNumber = (value: string) => {
   if (!value) return value;
 
@@ -27,7 +54,6 @@ export const formatPhoneNumber = (value: string) => {
   return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
 };
 
-//  ai generated 🎉
 export const getNext5Days = () => {
   const dates = [];
   const tomorrow = new Date();

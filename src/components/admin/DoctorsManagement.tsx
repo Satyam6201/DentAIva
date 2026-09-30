@@ -1,3 +1,5 @@
+"use client";
+
 import { useGetDoctors } from "@/hooks/use-doctors";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -8,6 +10,7 @@ import { Badge } from "../ui/badge";
 import AddDoctorDialog from "./AddDoctorDialog";
 import { Doctor } from "@prisma/client";
 import EditDoctorDialog from "./EditDoctorDialog";
+import { getSafeAvatarUrl } from "@/lib/utils";
 
 function DoctorsManagement() {
   const { data: doctors = [] } = useGetDoctors();
@@ -28,95 +31,122 @@ function DoctorsManagement() {
 
   return (
     <>
-      <Card className="mb-12">
-        <CardHeader className="flex items-center justify-between">
+      <Card className="mb-12 border border-border/80 bg-card/90 shadow-sm">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xl font-bold">
               <StethoscopeIcon className="size-5 text-primary" />
-              Doctors Management
+              Doctors & Specialists Roster
             </CardTitle>
-            <CardDescription>Manage and oversee all doctors in your practice</CardDescription>
+            <CardDescription className="text-xs">
+              Manage doctor credentials, clinical availability, and view appointment load
+            </CardDescription>
           </div>
 
           <Button
             onClick={() => setIsAddDialogOpen(true)}
-            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/100"
+            className="bg-primary hover:bg-primary/90 text-white font-medium text-xs rounded-xl shadow-md h-9"
           >
-            <PlusIcon className="mr-2 size-4" />
+            <PlusIcon className="mr-1.5 size-4" />
             Add Doctor
           </Button>
         </CardHeader>
 
         <CardContent>
-          <div className="space-y-4">
-            {doctors.map((doctor) => (
-              <div
-                key={doctor.id}
-                className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border/50"
-              >
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={doctor.imageUrl}
-                    alt={doctor.name}
-                    width={48}
-                    height={48}
-                    className="size-12 rounded-full object-cover ring-2 ring-background"
-                  />
+          <div className="space-y-3">
+            {doctors.map((doctor) => {
+              const safeAvatar = getSafeAvatarUrl(
+                doctor.imageUrl,
+                doctor.name,
+                doctor.gender
+              );
 
-                  <div>
-                    <div className="font-semibold">{doctor.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {doctor.speciality}
-
-                      <span className="ml-2 px-2 py-0.5 bg-muted rounded text-xs">
-                        {doctor.gender === "MALE" ? "Male" : "Female"}
-                      </span>
+              return (
+                <div
+                  key={doctor.id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-muted/20 hover:bg-muted/30 rounded-2xl border border-border/60 gap-4 transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="size-12 rounded-xl overflow-hidden bg-primary/10 relative shrink-0 ring-2 ring-background border border-primary/20">
+                      <Image
+                        src={safeAvatar}
+                        alt={doctor.name}
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
                     </div>
 
-                    <div className="flex items-center gap-4 mt-1">
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MailIcon className="h-3 w-3" />
-                        {doctor.email}
+                    <div>
+                      <div className="font-bold text-sm text-foreground">
+                        {doctor.name}
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <PhoneIcon className="h-3 w-3" />
-                        {doctor.phone}
+                      <div className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
+                        <span className="text-primary font-medium">
+                          {doctor.speciality}
+                        </span>
+                        <span className="px-2 py-0.5 bg-muted rounded text-[10px] font-mono">
+                          {doctor.gender === "MALE" ? "Male" : "Female"}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 mt-1.5 text-[11px] text-muted-foreground">
+                        <div className="flex items-center gap-1 font-mono">
+                          <MailIcon className="size-3 text-primary" />
+                          {doctor.email}
+                        </div>
+                        <div className="flex items-center gap-1 font-mono">
+                          <PhoneIcon className="size-3 text-primary" />
+                          {doctor.phone}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="text-center">
-                    <div className="font-semibold text-primary">{doctor.appointmentCount}</div>
-                    <div className="text-xs text-muted-foreground">Appointments</div>
+                  <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0">
+                    <div className="text-left sm:text-right">
+                      <div className="font-mono font-bold text-primary text-sm">
+                        {doctor.appointmentCount}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground">
+                        Booked Visits
+                      </div>
+                    </div>
+
+                    {doctor.isActive ? (
+                      <Badge className="bg-green-500/10 text-green-400 border border-green-500/30 text-xs">
+                        Active
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs">
+                        Inactive
+                      </Badge>
+                    )}
+
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 px-3 text-xs border-primary/30 hover:bg-primary/10"
+                      onClick={() => handleEditDoctor(doctor)}
+                    >
+                      <EditIcon className="size-3.5 mr-1" />
+                      Edit
+                    </Button>
                   </div>
-
-                  {doctor.isActive ? (
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active</Badge>
-                  ) : (
-                    <Badge variant="secondary">Inactive</Badge>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-8 px-3"
-                    onClick={() => handleEditDoctor(doctor)}
-                  >
-                    <EditIcon className="size-4 mr-1" />
-                    Edit
-                  </Button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>
 
-      <AddDoctorDialog isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} />
+      <AddDoctorDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+      />
 
       <EditDoctorDialog
-        key={selectedDoctor?.id} // advanced react
+        key={selectedDoctor?.id}
         isOpen={isEditDialogOpen}
         onClose={handleCloseEditDialog}
         doctor={selectedDoctor}
@@ -124,4 +154,5 @@ function DoctorsManagement() {
     </>
   );
 }
+
 export default DoctorsManagement;

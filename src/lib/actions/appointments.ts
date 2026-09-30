@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../prisma";
 import { AppointmentStatus } from "@prisma/client";
+import { getSafeAvatarUrl } from "../utils";
 
 function transformAppointment(appointment: any) {
   return {
@@ -10,7 +11,7 @@ function transformAppointment(appointment: any) {
     patientName: `${appointment.user.firstName || ""} ${appointment.user.lastName || ""}`.trim(),
     patientEmail: appointment.user.email,
     doctorName: appointment.doctor.name,
-    doctorImageUrl: appointment.doctor.imageUrl || "",
+    doctorImageUrl: getSafeAvatarUrl(appointment.doctor.imageUrl, appointment.doctor.name),
     date: appointment.date.toISOString().split("T")[0],
   };
 }

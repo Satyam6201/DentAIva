@@ -2,7 +2,7 @@
 
 import { Gender } from "@prisma/client";
 import { prisma } from "../prisma";
-import { generateAvatar } from "../utils";
+import { generateAvatar, getSafeAvatarUrl } from "../utils";
 import { revalidatePath } from "next/cache";
 
 export async function getDoctors() {
@@ -16,6 +16,7 @@ export async function getDoctors() {
 
     return doctors.map((doctor) => ({
       ...doctor,
+      imageUrl: getSafeAvatarUrl(doctor.imageUrl, doctor.name, doctor.gender),
       appointmentCount: doctor._count.appointments,
     }));
   } catch (error) {
@@ -120,6 +121,7 @@ export async function getAvailableDoctors() {
 
     return doctors.map((doctor) => ({
       ...doctor,
+      imageUrl: getSafeAvatarUrl(doctor.imageUrl, doctor.name, doctor.gender),
       appointmentCount: doctor._count.appointments,
     }));
   } catch (error) {
