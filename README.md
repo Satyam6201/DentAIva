@@ -15,7 +15,8 @@
 - 🖨️ **Printable Official Clinic Pass**: Hospital-grade printable pass with barcode, QR verification placeholder, attending doctor signature line, and pre-visit clinical checklist.
 - 🩹 **Post-Operative Aftercare Hub (`/aftercare`)**: Procedure-specific recovery protocols (extractions, root canals, implants, whitening), day-by-day milestone timelines, and interactive healing checklists.
 - 🗣️ **AI Voice Dental Assistant (`/voice`)**: Real-time voice consultation powered by **Vapi AI** (*Riley* persona) with audio waveforms and live transcripts.
-- 📅 **3-Step Smart Booking Flow (`/appointments`)**: Dynamic slot selection with real-time double-booking prevention backed by PostgreSQL.
+- 📅 **3-Step Smart Booking Flow (`/appointments`)**: Doctor search, specialty filter chips, dynamic 5-day slot selection, and real-time double-booking prevention backed by PostgreSQL.
+- 👨‍⚕️ **Reliable Clinical Avatar System**: Professional high-resolution doctor portraits with resilient fallback (`getSafeAvatarUrl()`) ensuring zero broken avatar links.
 - 📩 **Automated Confirmation Emails**: Responsive HTML email templates dispatched via **React Email + Resend**.
 - 📊 **Practice Management Portal (`/admin`)**: Real-time stats, doctor CRUD operations, and one-click appointment status toggles (`CONFIRMED` ↔ `COMPLETED`).
 - 🔐 **Authentication & Subscriptions**: Multi-method login via **Clerk** with subscription tier gating (`ai_basic` & `ai_pro`) and `<PricingTable />`.
@@ -49,6 +50,11 @@
 * **Interactive Healing Checklist**: Check off post-op tasks (gauze pressure, ice packs, medication adherence, warm salt water rinses).
 * **Hospital Red Flags Warning**: Clear guidance on when to seek urgent care (fever > 101°F, persistent bleeding, swelling spreading to throat).
 
+### 👨‍⚕️ Verified Doctor Profiles & Reliable Avatars
+* **Deterministic Medical Portraits**: High-resolution clinical doctor photography dynamically assigned and verified based on specialty, name, and gender.
+* **Resilient Avatar Fallbacks**: `getSafeAvatarUrl()` automatically intercepts missing or failing external avatar endpoints, guaranteeing 100% image uptime.
+* **Search & Filtering**: Search doctors by name or bio and filter by clinical specialty in real-time.
+
 ### 🎙️ AI Voice Dental Assistant (Powered by Vapi)
 * **Real-time Voice Consultations**: Interactive voice agent (*Riley*) advising on symptoms, care tips, procedure expectations, and pricing.
 * **Audio Wave Visualizer & Live Transcript**: Real-time conversational transcripts with voice wave animations.
@@ -64,8 +70,8 @@
 ### 🛡️ Administrative Portal
 * **Role-Based Protection**: Protected via server-side verification against configured `ADMIN_EMAIL`.
 * **Doctor Profile Management**: Full CRUD operations to add, edit, and toggle active/inactive statuses for doctors.
-* **Appointment Tracking**: Live table of all clinic appointments with one-click status toggling (`CONFIRMED` ↔ `COMPLETED`).
-* **Practice Analytics**: Real-time counter cards for active doctors, total appointments, and completed visits.
+* **Appointment Tracking**: Live table of all clinic appointments with search by patient/doctor and one-click status toggling (`CONFIRMED` ↔ `COMPLETED`).
+* **Practice Analytics**: Real-time counter cards for active doctors, total appointments, completed visits, and completion rate percentages.
 
 ---
 
@@ -131,7 +137,7 @@ dentaiva/
 │   │   │   └── users.ts            # User synchronization logic
 │   │   ├── prisma.ts               # Singleton Prisma client instance
 │   │   ├── resend.ts               # Resend client instance
-│   │   ├── utils.ts                # Tailwind merge, date helpers, appointment types
+│   │   ├── utils.ts                # Tailwind merge, date helpers, doctor avatars
 │   │   ├── vapi-prompt.ts          # AI assistant prompt & conversation instructions
 │   │   └── vapi.ts                 # Vapi web client instance
 │   └── middleware.ts               # Clerk authentication route middleware
