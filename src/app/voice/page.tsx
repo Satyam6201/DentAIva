@@ -5,12 +5,14 @@ import VapiWidget from "@/components/voice/VapiWidget";
 import WelcomeSection from "@/components/voice/WelcomeSection";
 import { auth } from "@clerk/nextjs/server";
 
+export const dynamic = "force-dynamic";
+
 async function VoicePage() {
   const { has } = await auth();
 
   const hasProPlan = has({ plan: "ai_basic" }) || has({ plan: "ai_pro" });
 
-  if (!hasProPlan) return <ProPlanRequired/>;
+  if (!hasProPlan) return <ProPlanRequired />;
 
   return (
     <div className="min-h-screen bg-background">

@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import AdminDashboardClient from "./AdminDashboardClient";
 import { isAdminEmail } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 async function AdminPage() {
   const user = await currentUser();
 
