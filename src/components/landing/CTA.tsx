@@ -1,86 +1,56 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MicIcon, CalendarIcon } from "lucide-react";
+import { SignUpButton } from "@clerk/nextjs";
 
 function CTA() {
   return (
-    <section className="relative py-20 px-6 overflow-hidden bg-gradient-to-br from-muted/10 via-background to-muted/5">
-      {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.03),transparent_70%)]"></div>
-
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-primary/5 to-primary/10 rounded-full border border-primary/10">
-                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                <span className="text-xs font-medium text-primary">Ready When You Are</span>
-              </div>
-
-              <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-                <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-                  Your dental health
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  journey starts here
-                </span>
-              </h2>
-
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Join 1,200+ patients who trust our AI for instant guidance and personalized care.
-              </p>
+    <section className="relative py-16 sm:py-20 px-4 sm:px-6 overflow-hidden bg-gradient-to-br from-muted/10 via-background to-muted/5 border-t border-border/50">
+      <div className="relative z-10 max-w-5xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          <div className="space-y-5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+              <span className="size-1.5 bg-primary rounded-full animate-pulse" />
+              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                24/7 Dental Platform
+              </span>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button
-                size="lg"
-                className="px-6 py-3 font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/95 hover:to-primary/85 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
-              >
-                <MicIcon className="mr-2 h-4 w-4" />
-                Start free chat
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="px-6 py-3 font-semibold border border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 rounded-xl"
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                Book appointment
-              </Button>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight">
+              Your Dental Health Journey Starts Here
+            </h2>
+
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Join patients who rely on DentAIva for instant clinical triage, transparent pricing, and appointment scheduling.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-1">
+              <SignUpButton mode="modal">
+                <Button className="h-10 px-5 text-xs font-semibold bg-primary hover:bg-primary/90 text-white rounded-xl shadow-xs flex items-center justify-center gap-2">
+                  <MicIcon className="size-4" />
+                  Try Voice Consultation
+                </Button>
+              </SignUpButton>
+
+              <SignUpButton mode="modal">
+                <Button variant="outline" className="h-10 px-5 text-xs font-semibold border-primary/30 hover:border-primary rounded-xl flex items-center justify-center gap-2">
+                  <CalendarIcon className="size-4 text-primary" />
+                  Book Clinic Visit
+                </Button>
+              </SignUpButton>
             </div>
           </div>
 
-          {/* Right Content - CTA Image */}
-          <div className="relative flex justify-center lg:justify-end">
+          <div className="flex justify-center lg:justify-end">
             <div className="relative">
-              {/* Floating Badge */}
-              <div className="absolute -top-4 left-4 bg-gradient-to-r from-green-500/90 to-emerald-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg z-10">
-                <div className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                  Available 24/7
-                </div>
-              </div>
-
-              {/* Main Image */}
-              <div className="relative">
-                {/* Subtle glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl blur-xl scale-110"></div>
-
-                <Image
-                  src="/cta.png"
-                  alt="DentAIva AI Assistant"
-                  width={300}
-                  height={300}
-                  className="relative w-80 h-auto drop-shadow-xl hover:scale-105 transition-transform duration-500"
-                  priority
-                />
-              </div>
-
-              {/* Decorative Elements */}
-              <div className="absolute -bottom-2 -right-2 w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-lg"></div>
+              <Image
+                src="/cta.png"
+                alt="DentAIva AI Clinical Assistant"
+                width={260}
+                height={260}
+                className="w-64 h-auto object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                priority
+              />
             </div>
           </div>
         </div>
@@ -88,4 +58,5 @@ function CTA() {
     </section>
   );
 }
+
 export default CTA;

@@ -13,7 +13,6 @@ import {
   ShieldCheckIcon,
   CheckCircle2Icon,
   CalendarIcon,
-  SparklesIcon,
   AlertTriangleIcon,
   HeartPulseIcon,
   UserCheckIcon,
@@ -21,6 +20,7 @@ import {
   SmileIcon,
   MicroscopeIcon,
   ActivityIcon,
+  SparklesIcon,
 } from "lucide-react";
 import Link from "next/link";
 import EmergencyTriageModal from "@/components/emergency/EmergencyTriageModal";
@@ -31,18 +31,14 @@ interface Department {
   shortName: string;
   icon: React.ElementType;
   leadSpecialist: string;
-  qualification: string;
   description: string;
   procedures: {
     name: string;
     duration: string;
     price: string;
-    recovery: string;
-    anesthesia: string;
   }[];
-  prepGuidelines: string[];
-  insuranceCovered: boolean;
-  emergencyAvailable: boolean;
+  prepTip: string;
+  emergencyAvailable?: boolean;
 }
 
 const DEPARTMENTS: Department[] = [
@@ -51,312 +47,123 @@ const DEPARTMENTS: Department[] = [
     name: "Oral & Maxillofacial Surgery",
     shortName: "Oral Surgery",
     icon: StethoscopeIcon,
-    leadSpecialist: "Dr. Marcus Vance",
-    qualification: "DDS, FACS, Board Certified Oral Surgeon (15+ yrs exp)",
+    leadSpecialist: "Dr. Marcus Vance, DDS",
     description:
-      "Advanced surgical care for impacted wisdom teeth, complex extractions, corrective jaw surgery, facial trauma reconstruction, and pre-prosthetic bone grafts.",
+      "Impacted wisdom tooth extractions, jaw reconstruction, and bone grafting with IV sedation options.",
     procedures: [
-      {
-        name: "Surgical Wisdom Tooth Extraction",
-        duration: "45–60 min",
-        price: "$250 - $400",
-        recovery: "3–5 days",
-        anesthesia: "IV Sedation / Local",
-      },
-      {
-        name: "Alveolar Bone Grafting",
-        duration: "60 min",
-        price: "$450 - $800",
-        recovery: "1–2 weeks",
-        anesthesia: "Local + Nitrous Oxide",
-      },
-      {
-        name: "Cyst Enucleation & Biopsy",
-        duration: "45 min",
-        price: "$300 - $600",
-        recovery: "3–7 days",
-        anesthesia: "Local Anesthesia",
-      },
+      { name: "Wisdom Tooth Extraction", duration: "45 min", price: "$250–$400" },
+      { name: "Alveolar Bone Graft", duration: "60 min", price: "$450–$800" },
+      { name: "Surgical Biopsy & Cyst Care", duration: "45 min", price: "$300–$600" },
     ],
-    prepGuidelines: [
-      "Fasting required for 6–8 hours prior if undergoing IV sedation.",
-      "Arrange an adult escort for post-procedure transport home.",
-      "Avoid blood-thinning OTC medication like Aspirin 48h prior.",
-    ],
-    insuranceCovered: true,
+    prepTip: "Fasting required for 6–8 hours prior if undergoing sedation.",
     emergencyAvailable: true,
   },
   {
     id: "orthodontics",
-    name: "Orthodontics & Dentofacial Orthopedics",
+    name: "Orthodontics & Clear Aligners",
     shortName: "Orthodontics",
     icon: SmileIcon,
-    leadSpecialist: "Dr. Elena Rostova",
-    qualification: "DMD, MS Orthodontics, Harvard Dental Alumni",
+    leadSpecialist: "Dr. Elena Rostova, DMD",
     description:
-      "Comprehensive smile alignment using cutting-edge 3D intraoral scanning, Invisalign® clear aligners, ceramic braces, and pediatric interceptive jaw guidance.",
+      "Modern smile alignment with Invisalign® clear aligners, ceramic braces, and pediatric jaw guidance.",
     procedures: [
-      {
-        name: "Invisalign® Full Alignment Consultation",
-        duration: "45 min",
-        price: "$100 (Credited to plan)",
-        recovery: "Zero downtime",
-        anesthesia: "None required",
-      },
-      {
-        name: "Ceramic / Metal Bracket Installation",
-        duration: "90 min",
-        price: "$2,800 - $4,500",
-        recovery: "2–3 days mild ache",
-        anesthesia: "None required",
-      },
-      {
-        name: "Palatal Expander & Interceptive Ortho",
-        duration: "45 min",
-        price: "$950 - $1,600",
-        recovery: "1–2 days adaptation",
-        anesthesia: "None required",
-      },
+      { name: "Invisalign® 3D Scan & Consultation", duration: "45 min", price: "$100" },
+      { name: "Ceramic / Metal Bracket Installation", duration: "90 min", price: "$2,800–$4,500" },
+      { name: "Palatal Expander & Early Ortho", duration: "45 min", price: "$950–$1,600" },
     ],
-    prepGuidelines: [
-      "Perform thorough brushing and flossing before your scan.",
-      "Bring any existing dental retainers, mouthguards, or night guards.",
-    ],
-    insuranceCovered: true,
-    emergencyAvailable: false,
+    prepTip: "Bring any existing retainers or night guards to your visit.",
   },
   {
     id: "endodontics",
-    name: "Endodontics & Root Canal Therapy",
+    name: "Endodontics & Root Canal Care",
     shortName: "Endodontics",
     icon: MicroscopeIcon,
-    leadSpecialist: "Dr. Alexander Thorne",
-    qualification: "DDS, Endodontic Specialist, AAE Member",
+    leadSpecialist: "Dr. Alexander Thorne, DDS",
     description:
-      "Painless single-visit root canal treatments utilizing 3D CBCT imaging, surgical operative microscopes, and gentle laser canal disinfection.",
+      "Painless single-visit root canal treatments utilizing 3D CBCT imaging and operative microscopes.",
     procedures: [
-      {
-        name: "Molar Microscopic Root Canal Therapy",
-        duration: "60–75 min",
-        price: "$650 - $950",
-        recovery: "24–48 hours",
-        anesthesia: "Advanced Local Block",
-      },
-      {
-        name: "Anterior / Premolar Root Canal",
-        duration: "45–60 min",
-        price: "$450 - $700",
-        recovery: "24 hours",
-        anesthesia: "Local Anesthesia",
-      },
-      {
-        name: "Endodontic Retreatment & Apicoectomy",
-        duration: "90 min",
-        price: "$800 - $1,200",
-        recovery: "2–4 days",
-        anesthesia: "Local + Oral Sedation",
-      },
+      { name: "Microscopic Molar Root Canal", duration: "60 min", price: "$650–$950" },
+      { name: "Anterior Tooth Root Canal", duration: "45 min", price: "$450–$700" },
+      { name: "Endodontic Retreatment", duration: "90 min", price: "$800–$1,200" },
     ],
-    prepGuidelines: [
-      "Eat a regular meal before your appointment as numbness will last 3–4 hours.",
-      "Continue prescribed blood pressure medications unless explicitly directed otherwise.",
-    ],
-    insuranceCovered: true,
+    prepTip: "Eat a regular meal before arrival; local numbness lasts 3–4 hours.",
     emergencyAvailable: true,
   },
   {
     id: "implantology",
-    name: "Prosthodontics & Dental Implants",
-    shortName: "Implants & Crowns",
+    name: "Dental Implants & Prosthodontics",
+    shortName: "Implants",
     icon: ShieldCheckIcon,
-    leadSpecialist: "Dr. Jonathan Hayes",
-    qualification: "FACP, Board Certified Prosthodontist",
+    leadSpecialist: "Dr. Jonathan Hayes, FACP",
     description:
-      "Permanent dental restoration with medical-grade titanium and zirconia implants, full-arch All-on-4 rehabilitation, and same-day CEREC porcelain crowns.",
+      "Permanent tooth restoration with titanium implants, full-arch restorations, and same-day crowns.",
     procedures: [
-      {
-        name: "Single Titanium Implant Placement",
-        duration: "60 min",
-        price: "$1,200 - $1,800",
-        recovery: "2–3 days",
-        anesthesia: "Local + Nitrous Oxide",
-      },
-      {
-        name: "CEREC Same-Day Zirconia Crown",
-        duration: "90 min",
-        price: "$750 - $1,100",
-        recovery: "Immediate",
-        anesthesia: "Local Anesthesia",
-      },
-      {
-        name: "All-on-4 Full Arch Consultation & 3D Plan",
-        duration: "60 min",
-        price: "$150",
-        recovery: "None (Diagnostic)",
-        anesthesia: "None",
-      },
+      { name: "Single Titanium Implant Placement", duration: "60 min", price: "$1,200–$1,800" },
+      { name: "CEREC Same-Day Zirconia Crown", duration: "90 min", price: "$750–$1,100" },
+      { name: "All-on-4 Full Arch Consultation", duration: "60 min", price: "$150" },
     ],
-    prepGuidelines: [
-      "Have a list of current medications and supplements ready.",
-      "Inform the surgeon if you take bisphosphonates or blood thinners.",
-    ],
-    insuranceCovered: true,
-    emergencyAvailable: false,
+    prepTip: "Inform your surgeon if taking blood thinners or bone medications.",
   },
   {
     id: "periodontics",
-    name: "Periodontics & Gum Disease Care",
+    name: "Periodontics & Gum Therapy",
     shortName: "Periodontics",
     icon: ActivityIcon,
-    leadSpecialist: "Dr. Rachel Kim",
-    qualification: "DDS, Board Certified Periodontist, AAP Member",
+    leadSpecialist: "Dr. Rachel Kim, DDS",
     description:
-      "Advanced treatment for bleeding gums, gingivitis, and severe periodontitis using LANAP laser regeneration, deep ultrasonic scaling, and soft tissue grafting.",
+      "Advanced care for bleeding gums, gingivitis, and periodontitis with laser pocket therapy and scaling.",
     procedures: [
-      {
-        name: "Full Mouth Ultrasonic Scaling & Root Planing",
-        duration: "60–90 min",
-        price: "$280 - $450",
-        recovery: "24–48 hours",
-        anesthesia: "Topical + Local Numbing",
-      },
-      {
-        name: "Laser Periodontal Pocket Therapy",
-        duration: "45 min",
-        price: "$350 - $600",
-        recovery: "Immediate",
-        anesthesia: "Local Anesthesia",
-      },
-      {
-        name: "Connective Tissue Gum Graft",
-        duration: "75 min",
-        price: "$600 - $1,100",
-        recovery: "5–7 days",
-        anesthesia: "Local + Nitrous Oxide",
-      },
+      { name: "Ultrasonic Deep Scaling & Root Planing", duration: "60 min", price: "$280–$450" },
+      { name: "Laser Periodontal Pocket Therapy", duration: "45 min", price: "$350–$600" },
+      { name: "Soft Tissue Gum Grafting", duration: "75 min", price: "$600–$1,100" },
     ],
-    prepGuidelines: [
-      "Brush and floss gently on the day of treatment.",
-      "Plan on consuming cool, soft foods for the first 24 hours.",
-    ],
-    insuranceCovered: true,
-    emergencyAvailable: false,
+    prepTip: "Plan to consume cool, soft foods for 24 hours post-treatment.",
   },
   {
     id: "pediatric",
-    name: "Pediatric Dentistry (Kids Care)",
+    name: "Pediatric Dentistry (Kids)",
     shortName: "Pediatric",
     icon: HeartPulseIcon,
-    leadSpecialist: "Dr. Maya Patel",
-    qualification: "BDS, MSD Pediatric Dental Specialist",
+    leadSpecialist: "Dr. Maya Patel, BDS",
     description:
-      "Compassionate, fear-free dental visits for infants, children, and teenagers. Offering gentle checkups, dental sealants, fluoride treatments, and nitrous oxide sedation.",
+      "Gentle, stress-free dental visits for infants and children, featuring protective sealants and nitrous oxide.",
     procedures: [
-      {
-        name: "Child Gentle Exam + Fluoride Varnish",
-        duration: "30 min",
-        price: "$95 - $140",
-        recovery: "Immediate",
-        anesthesia: "None required",
-      },
-      {
-        name: "Molar Dental Sealants (Per Tooth)",
-        duration: "20 min",
-        price: "$45 - $70",
-        recovery: "Immediate",
-        anesthesia: "None required",
-      },
-      {
-        name: "Pediatric Sedation Restoration",
-        duration: "45 min",
-        price: "$180 - $350",
-        recovery: "2–4 hours",
-        anesthesia: "Laughing Gas (Nitrous)",
-      },
+      { name: "Child Gentle Exam + Fluoride", duration: "30 min", price: "$95–$140" },
+      { name: "Molar Dental Sealants (Per Tooth)", duration: "20 min", price: "$45–$70" },
+      { name: "Pediatric Restorative Care", duration: "45 min", price: "$180–$350" },
     ],
-    prepGuidelines: [
-      "Avoid heavy meals 2 hours before pediatric nitrous oxide visits.",
-      "Use positive, encouraging words with your child—never use words like 'shot' or 'needle'.",
-    ],
-    insuranceCovered: true,
+    prepTip: "Avoid heavy meals for 2 hours prior to laughing gas sedation.",
     emergencyAvailable: true,
   },
   {
     id: "cosmetic",
-    name: "Cosmetic & Aesthetic Dentistry",
+    name: "Cosmetic & Smile Aesthetics",
     shortName: "Cosmetic",
     icon: SparklesIcon,
-    leadSpecialist: "Dr. Julian Sterling",
-    qualification: "DDS, AACD Accredited Cosmetic Dentist",
+    leadSpecialist: "Dr. Julian Sterling, DDS",
     description:
-      "Transformative aesthetic smile designs including Philips Zoom! in-office laser whitening, hand-crafted porcelain veneers, and composite bonding.",
+      "Aesthetic smile designs including in-office laser whitening, porcelain veneers, and composite bonding.",
     procedures: [
-      {
-        name: "Philips Zoom! In-Office Laser Teeth Whitening",
-        duration: "60 min",
-        price: "$350 - $500",
-        recovery: "Immediate",
-        anesthesia: "None required",
-      },
-      {
-        name: "Custom Handcrafted Porcelain Veneer (Per Unit)",
-        duration: "75 min",
-        price: "$900 - $1,500",
-        recovery: "1–2 days",
-        anesthesia: "Local Anesthesia",
-      },
-      {
-        name: "Composite Aesthetic Edge Bonding",
-        duration: "45 min",
-        price: "$180 - $320",
-        recovery: "Immediate",
-        anesthesia: "None or Minimal Local",
-      },
+      { name: "Philips Zoom! Laser Whitening", duration: "60 min", price: "$350–$500" },
+      { name: "Porcelain Veneer (Per Tooth)", duration: "75 min", price: "$900–$1,500" },
+      { name: "Composite Edge Bonding", duration: "45 min", price: "$180–$320" },
     ],
-    prepGuidelines: [
-      "Complete a professional dental cleaning within 3 months prior to whitening.",
-      "Avoid coffee, red wine, and tobacco for 48 hours post-whitening.",
-    ],
-    insuranceCovered: false,
-    emergencyAvailable: false,
+    prepTip: "Avoid coffee, tea, and red wine for 48 hours post-whitening.",
   },
   {
     id: "emergency-dept",
-    name: "24/7 Dental Trauma & Emergency Care",
-    shortName: "Emergency Trauma",
+    name: "Trauma & Urgent Dental Care",
+    shortName: "Emergency",
     icon: AlertTriangleIcon,
-    leadSpecialist: "Dr. Liam O'Connor",
-    qualification: "DDS, Emergency Dental & Trauma Specialist",
+    leadSpecialist: "Dr. Liam O'Connor, DDS",
     description:
-      "Round-the-clock emergency team ready for knocked-out teeth, acute dental abscesses, continuous bleeding, fractured jaws, and severe dental trauma.",
+      "Round-the-clock emergency care for knocked-out teeth, acute infections, oral trauma, and severe pain.",
     procedures: [
-      {
-        name: "Immediate Tooth Re-Implantation & Splinting",
-        duration: "45 min",
-        price: "$300 - $550",
-        recovery: "2–3 weeks",
-        anesthesia: "Local Anesthetic Block",
-      },
-      {
-        name: "Emergency Pulp Extirpation (Pain Relief)",
-        duration: "30–45 min",
-        price: "$200 - $350",
-        recovery: "24 hours",
-        anesthesia: "Deep Local Block",
-      },
-      {
-        name: "Incision & Drainage of Acute Abscess",
-        duration: "30 min",
-        price: "$250 - $400",
-        recovery: "2–3 days",
-        anesthesia: "Local Anesthesia",
-      },
+      { name: "Tooth Re-Implantation & Splint", duration: "45 min", price: "$300–$550" },
+      { name: "Emergency Pulp Pain Relief", duration: "30 min", price: "$200–$350" },
+      { name: "Acute Abscess Drainage", duration: "30 min", price: "$250–$400" },
     ],
-    prepGuidelines: [
-      "If tooth is knocked out, keep it submerged in milk and arrive within 60 minutes.",
-      "Call our direct trauma hotline: +1 (800) 433-6824 for immediate instructions en route.",
-    ],
-    insuranceCovered: true,
+    prepTip: "Submerge knocked-out teeth in cold milk and arrive within 60 minutes.",
     emergencyAvailable: true,
   },
 ];
@@ -382,222 +189,171 @@ export default function ServicesPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-10">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-background border border-primary/20 p-8 sm:p-10">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-              <div className="space-y-4 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-                  <StethoscopeIcon className="size-4 text-primary" />
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                    Hospital Clinical Departments
-                  </span>
-                </div>
-                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-                  Comprehensive Dental Departments & Specializations
-                </h1>
-                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                  DentAIva features 8 dedicated specialty departments staffed by board-certified dental surgeons, prosthodontists, endodontists, and pediatric specialists with hospital-grade sterilization protocols.
-                </p>
-
-                <div className="flex flex-wrap gap-4 pt-2">
-                  <div className="flex items-center gap-2 text-xs text-foreground bg-card/80 px-3 py-1.5 rounded-lg border">
-                    <ShieldCheckIcon className="size-4 text-primary" />
-                    <span>Board Certified Specialists</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-foreground bg-card/80 px-3 py-1.5 rounded-lg border">
-                    <ClockIcon className="size-4 text-primary" />
-                    <span>Same-Day Emergency Slots</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-foreground bg-card/80 px-3 py-1.5 rounded-lg border">
-                    <CheckCircle2Icon className="size-4 text-primary" />
-                    <span>Transparent Pricing & Insurance</span>
-                  </div>
-                </div>
+      <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* HEADER STRIP */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-border/60">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-2">
+                <StethoscopeIcon className="size-3.5" />
+                Hospital Specialties
               </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                Clinical Departments & Services
+              </h1>
+              <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+                8 board-certified specialty divisions with transparent pricing and online booking.
+              </p>
+            </div>
 
-              <div className="w-full lg:w-72 bg-card/90 border border-red-500/30 rounded-2xl p-5 shadow-lg space-y-3 shrink-0">
-                <div className="flex items-center gap-2 text-red-500 font-semibold text-xs uppercase">
-                  <AlertTriangleIcon className="size-4" />
-                  <span>Trauma & Urgent Care</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Severe pain, bleeding, or knocked-out tooth? Our emergency trauma team is on standby 24/7.
-                </p>
-                <Button
-                  onClick={() => setIsTriageOpen(true)}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold h-9 shadow-md"
-                >
-                  <HeartPulseIcon className="size-3.5 mr-1.5" />
-                  Emergency Triage Guide
+            {/* QUICK EMERGENCY ALERT BUTTON */}
+            <div className="flex items-center gap-3 shrink-0">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsTriageOpen(true)}
+                className="h-9 px-3.5 text-xs font-semibold border-red-500/30 text-red-500 hover:bg-red-500/10 rounded-xl flex items-center gap-2"
+              >
+                <AlertTriangleIcon className="size-3.5" />
+                Emergency Triage
+              </Button>
+              <Link href="/appointments">
+                <Button size="sm" className="h-9 px-4 text-xs font-semibold bg-primary hover:bg-primary/90 text-white rounded-xl shadow-xs">
+                  <CalendarIcon className="size-3.5 mr-1.5" />
+                  Book Visit
                 </Button>
-                <a
-                  href="tel:18004336824"
-                  className="block text-center text-xs font-mono font-bold text-foreground hover:text-red-400"
-                >
-                  Hotline: +1 (800) 433-6824
-                </a>
-              </div>
+              </Link>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-              <div className="relative w-full sm:w-96">
-                <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search procedures (e.g. Root Canal, Wisdom, Whitening)..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-11 bg-card border-border/70 rounded-xl text-sm"
-                />
-              </div>
+          {/* SEARCH & HORIZONTAL FILTER BAR */}
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+            <div className="relative w-full sm:w-80">
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Search procedures or specialties..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 h-9 bg-card border-border/70 rounded-xl text-xs"
+              />
+            </div>
 
-              <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1">
-                <button
-                  type="button"
-                  onClick={() => setSelectedDeptId("all")}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                    selectedDeptId === "all"
-                      ? "bg-primary text-white shadow-sm"
-                      : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  All Specializations ({DEPARTMENTS.length})
-                </button>
-                {DEPARTMENTS.map((dept) => {
-                  const DeptIcon = dept.icon;
-                  return (
-                    <button
-                      key={dept.id}
-                      type="button"
-                      onClick={() => setSelectedDeptId(dept.id)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                        selectedDeptId === dept.id
-                          ? "bg-primary text-white shadow-sm"
-                          : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      <DeptIcon className="size-3.5" />
-                      <span>{dept.shortName}</span>
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+              <button
+                type="button"
+                onClick={() => setSelectedDeptId("all")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                  selectedDeptId === "all"
+                    ? "bg-primary text-white shadow-xs font-semibold"
+                    : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                All ({DEPARTMENTS.length})
+              </button>
+              {DEPARTMENTS.map((dept) => {
+                const DeptIcon = dept.icon;
+                return (
+                  <button
+                    key={dept.id}
+                    type="button"
+                    onClick={() => setSelectedDeptId(dept.id)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                      selectedDeptId === dept.id
+                        ? "bg-primary text-white shadow-xs font-semibold"
+                        : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <DeptIcon className="size-3.5" />
+                    <span>{dept.shortName}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* BALANCED 3-COLUMN DEPARTMENT GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredDepartments.map((dept) => {
               const DeptIcon = dept.icon;
               return (
                 <Card
                   key={dept.id}
-                  className="border border-border/80 bg-card/80 backdrop-blur-sm hover:border-primary/40 transition-all duration-300 shadow-sm flex flex-col justify-between"
+                  className="border border-border/80 bg-card/90 hover:border-primary/40 transition-all duration-200 shadow-xs flex flex-col justify-between rounded-2xl"
                 >
-                  <CardHeader className="space-y-3 pb-4">
-                    <div className="flex items-start justify-between gap-4">
+                  <CardHeader className="space-y-2.5 p-5 pb-3">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="p-2.5 bg-primary/10 rounded-2xl border border-primary/20 text-primary shrink-0">
-                          <DeptIcon className="size-6" />
+                        <div className="p-2 bg-primary/10 rounded-xl border border-primary/20 text-primary shrink-0">
+                          <DeptIcon className="size-5" />
                         </div>
                         <div>
-                          <CardTitle className="text-xl font-bold text-foreground">
+                          <CardTitle className="text-base font-bold text-foreground leading-tight">
                             {dept.name}
                           </CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-[11px] font-normal">
-                              <UserCheckIcon className="size-3 mr-1 text-primary" />
-                              {dept.leadSpecialist}
-                            </Badge>
-                            {dept.emergencyAvailable && (
-                              <Badge className="bg-red-500/10 text-red-400 border-red-500/20 text-[10px]">
-                                24/7 On-Call
-                              </Badge>
-                            )}
+                          <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                            <UserCheckIcon className="size-3 text-primary" />
+                            <span>{dept.leadSpecialist}</span>
                           </div>
                         </div>
                       </div>
+
+                      {dept.emergencyAvailable && (
+                        <Badge className="bg-red-500/10 text-red-500 border-red-500/20 text-[10px] shrink-0 font-medium">
+                          24/7 On-Call
+                        </Badge>
+                      )}
                     </div>
 
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                       {dept.description}
-                    </p>
-                    <p className="text-[11px] text-primary/80 font-mono">
-                      {dept.qualification}
                     </p>
                   </CardHeader>
 
-                  <CardContent className="space-y-5 pt-0">
-                    <div className="space-y-2">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Common Clinical Procedures & Fees
-                      </h4>
-                      <div className="space-y-2">
+                  <CardContent className="space-y-4 p-5 pt-0">
+                    {/* COMPACT PROCEDURES LIST */}
+                    <div className="space-y-1.5">
+                      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        Featured Procedures
+                      </div>
+                      <div className="space-y-1.5">
                         {dept.procedures.map((proc, i) => (
                           <div
                             key={i}
-                            className="p-3 rounded-xl bg-muted/20 border border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                            className="p-2 rounded-lg bg-muted/20 border border-border/40 flex items-center justify-between text-xs gap-2"
                           >
-                            <div className="space-y-0.5">
-                              <span className="font-semibold text-foreground">
-                                {proc.name}
+                            <span className="font-medium text-foreground truncate">
+                              {proc.name}
+                            </span>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="text-[10px] text-muted-foreground font-mono flex items-center gap-0.5">
+                                <ClockIcon className="size-2.5" />
+                                {proc.duration}
                               </span>
-                              <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <ClockIcon className="size-3" />
-                                  {proc.duration}
-                                </span>
-                                <span>• Anesthesia: {proc.anesthesia}</span>
-                                <span>• Recovery: {proc.recovery}</span>
-                              </div>
-                            </div>
-                            <div className="text-right sm:shrink-0 font-mono font-bold text-primary text-sm">
-                              {proc.price}
+                              <span className="text-xs font-mono font-bold text-primary">
+                                {proc.price}
+                              </span>
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/10 space-y-1.5">
-                      <div className="text-[11px] font-semibold text-primary flex items-center gap-1">
-                        <SparklesIcon className="size-3.5" />
-                        <span>Pre-Procedure Preparation Protocol</span>
-                      </div>
-                      <ul className="space-y-1 text-[11px] text-muted-foreground">
-                        {dept.prepGuidelines.map((guideline, gIdx) => (
-                          <li key={gIdx} className="flex items-start gap-1.5">
-                            <span className="text-primary font-bold">•</span>
-                            <span>{guideline}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    {/* PREP NOTE */}
+                    <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/10 text-[11px] text-muted-foreground flex items-start gap-1.5">
+                      <CheckCircle2Icon className="size-3.5 text-primary shrink-0 mt-0.5" />
+                      <span className="leading-tight">{dept.prepTip}</span>
                     </div>
 
-                    <div className="pt-2 flex items-center justify-between border-t border-border/60">
-                      <div className="text-[11px] text-muted-foreground">
-                        {dept.insuranceCovered ? (
-                          <span className="text-emerald-500 font-medium inline-flex items-center gap-1">
-                            <CheckCircle2Icon className="size-3.5" />
-                            Eligible for PPO Insurance Claims
-                          </span>
-                        ) : (
-                          <span>Self-Pay / Flexible Installments</span>
-                        )}
-                      </div>
-
-                      <Link href="/appointments">
-                        <Button
-                          size="sm"
-                          className="bg-primary hover:bg-primary/90 text-white font-medium text-xs rounded-xl"
-                        >
-                          <CalendarIcon className="size-3.5 mr-1.5" />
-                          Book This Department
-                          <ArrowRightIcon className="size-3.5 ml-1" />
-                        </Button>
-                      </Link>
-                    </div>
+                    {/* ACTION BUTTON */}
+                    <Link href="/appointments" className="block pt-1">
+                      <Button
+                        size="sm"
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-medium text-xs h-8 rounded-xl flex items-center justify-center gap-1.5"
+                      >
+                        Book {dept.shortName}
+                        <ArrowRightIcon className="size-3.5" />
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               );
@@ -605,11 +361,11 @@ export default function ServicesPage() {
           </div>
 
           {filteredDepartments.length === 0 && (
-            <div className="text-center py-16 bg-card border rounded-2xl space-y-3">
-              <StethoscopeIcon className="size-10 text-muted-foreground mx-auto" />
-              <h3 className="text-lg font-semibold">No specialized procedures found</h3>
-              <p className="text-sm text-muted-foreground">
-                Try searching with different keywords like "extraction", "crown", or "implants".
+            <div className="text-center py-12 bg-card border rounded-2xl space-y-3">
+              <StethoscopeIcon className="size-8 text-muted-foreground mx-auto" />
+              <h3 className="text-sm font-semibold">No specialized procedures found</h3>
+              <p className="text-xs text-muted-foreground">
+                Try searching for "extraction", "root canal", or "implants".
               </p>
               <Button
                 variant="outline"
@@ -618,8 +374,9 @@ export default function ServicesPage() {
                   setSearchTerm("");
                   setSelectedDeptId("all");
                 }}
+                className="text-xs h-8"
               >
-                Clear Search & Filters
+                Clear Search
               </Button>
             </div>
           )}

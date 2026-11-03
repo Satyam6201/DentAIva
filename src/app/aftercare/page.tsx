@@ -26,7 +26,6 @@ interface AftercareGuide {
   id: string;
   title: string;
   category: string;
-  badgeColor: string;
   icon: React.ElementType;
   summary: string;
   doList: string[];
@@ -41,165 +40,145 @@ interface AftercareGuide {
 const AFTERCARE_GUIDES: AftercareGuide[] = [
   {
     id: "extraction",
-    title: "Tooth Extraction & Wisdom Teeth Surgery",
+    title: "Tooth Extraction & Wisdom Teeth",
     category: "Oral Surgery",
-    badgeColor: "bg-red-500/10 text-red-400 border-red-500/20",
     icon: StethoscopeIcon,
     summary:
-      "Crucial guidelines to facilitate blood clot formation and prevent painful Dry Socket (Alveolar Osteitis).",
+      "Essential guidelines to promote blood clotting and prevent painful dry socket complications.",
     doList: [
-      "Keep firm, continuous pressure on the gauze pad for 30–45 minutes post-op.",
-      "Apply ice packs to the outside of your cheek (15 min on / 15 min off) for the first 24 hours.",
-      "Consume cool, soft foods like Greek yogurt, smoothies (spoon-fed), and lukewarm soups.",
-      "Take prescribed pain relievers and antibiotics exactly as instructed by your surgeon.",
-      "Begin gentle warm salt water rinses (1/2 tsp salt in 8 oz water) starting 24 hours AFTER surgery.",
+      "Keep firm pressure on the gauze pad for 30–45 minutes.",
+      "Apply ice packs to cheek (15 min on / 15 min off) for the first 24 hours.",
+      "Consume cool, soft foods (yogurt, smoothies, lukewarm soup).",
+      "Begin gentle warm salt water rinses 24 hours AFTER surgery.",
     ],
     dontList: [
-      "DO NOT drink through a straw for at least 7 days (suction dislodges blood clots).",
-      "DO NOT forcefully spit or rinse vigorously during the first 24 hours.",
-      "DO NOT smoke, vape, or use tobacco products for at least 72 hours.",
-      "DO NOT consume piping hot, spicy, or crunchy foods (chips, nuts, seeds).",
-      "DO NOT perform heavy lifting or strenuous exercise for 3 to 4 days.",
+      "DO NOT drink through a straw for at least 7 days.",
+      "DO NOT spit forcefully or rinse vigorously during the first 24 hours.",
+      "DO NOT smoke, vape, or use tobacco for at least 72 hours.",
+      "DO NOT engage in heavy exercise or lifting for 3 to 4 days.",
     ],
     timeline: [
       {
-        day: "Day 1 (0–24 Hours)",
-        milestone: "Clot Formation & Bleeding Control",
-        instructions:
-          "Rest with head elevated. Oozing is normal; bite on a damp black tea bag if bleeding persists. Ice cheek continuously.",
+        day: "Day 1 (0–24h)",
+        milestone: "Clot Formation",
+        instructions: "Rest with head elevated. Minor oozing is normal. Keep ice applied.",
       },
       {
-        day: "Day 2–3 (24–72 Hours)",
-        milestone: "Peak Swelling & Pain Management",
-        instructions:
-          "Swelling usually peaks around 48 hours. Switch from ice to warm moist compress. Begin warm salt water rinses 4 times daily.",
+        day: "Day 2–3",
+        milestone: "Peak Swelling",
+        instructions: "Switch to warm moist compress. Begin warm salt water rinses 4x daily.",
       },
       {
         day: "Day 4–7",
-        milestone: "Tissue Healing & Gradual Diet Transition",
-        instructions:
-          "Pain should noticeably decrease. Gradually reintroduce soft solid foods (scrambled eggs, pasta). Continue gentle oral hygiene.",
+        milestone: "Tissue Recovery",
+        instructions: "Discomfort subsides. Gradually reintroduce soft solids like pasta.",
       },
     ],
   },
   {
     id: "root-canal",
-    title: "Root Canal Therapy (Endodontics)",
+    title: "Root Canal Therapy",
     category: "Endodontics",
-    badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     icon: MicroscopeIcon,
     summary:
-      "Care instructions following pulp cleaning to protect the temporary filling and soothe periodontal ligament soreness.",
+      "Care instructions following pulp cleaning to protect the temporary seal and minimize tenderness.",
     doList: [
-      "Avoid chewing or biting on the treated tooth until your permanent crown is seated.",
-      "Take over-the-counter anti-inflammatories (e.g. Ibuprofen 400-600mg) for natural periapical ligament tenderness.",
-      "Continue brushing and flossing around the tooth gently.",
-      "Schedule your permanent crown placement within 2–4 weeks to prevent tooth fracture.",
+      "Avoid chewing on the treated tooth until your permanent crown is seated.",
+      "Take prescribed anti-inflammatories (e.g. Ibuprofen) for ligament tenderness.",
+      "Continue gentle daily brushing and flossing around the tooth.",
+      "Schedule your permanent crown within 2–4 weeks to prevent fracture.",
     ],
     dontList: [
-      "DO NOT eat hard, sticky, or chewy foods (caramels, ice, hard crusts).",
-      "DO NOT chew on that side while local numbness is still active (risk of cheek/tongue bite).",
-      "DO NOT ignore severe throbbing pain that worsens after 3 days.",
+      "DO NOT chew hard, sticky, or crunchy foods on that side.",
+      "DO NOT chew while local numbness is active to avoid biting tongue.",
+      "DO NOT disregard throbbing pain that worsens after 3 days.",
     ],
     timeline: [
       {
-        day: "Day 1 (First 24 Hours)",
-        milestone: "Numbness & Initial Tenderness",
-        instructions:
-          "Numbness will wear off in 2–4 hours. A bruised sensation when biting is normal as the bone heals.",
+        day: "Day 1",
+        milestone: "Numbness Fades",
+        instructions: "Local anesthetic wears off in 2–4 hours. Bruised sensation is expected.",
       },
       {
-        day: "Day 2–5",
-        milestone: "Periapical Ligament Recovery",
-        instructions:
-          "Tenderness when tapping the tooth subsides. Keep the temporary filling clean.",
+        day: "Day 2–4",
+        milestone: "Tenderness Subsides",
+        instructions: "Soreness upon tapping decreases. Keep temporary filling clean.",
       },
       {
-        day: "Within 3 Weeks",
-        milestone: "Permanent Crown Restoration",
-        instructions:
-          "The hollowed tooth requires a permanent porcelain crown to prevent bacterial re-infection and structural cracking.",
+        day: "Week 2–3",
+        milestone: "Permanent Crown",
+        instructions: "Complete restoration with permanent crown to prevent bacterial re-entry.",
       },
     ],
   },
   {
     id: "implants",
-    title: "Dental Implant & Bone Graft Recovery",
+    title: "Dental Implants & Grafts",
     category: "Implantology",
-    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
     icon: ShieldCheckIcon,
     summary:
-      "Ensuring successful osseointegration (bone fusion) and gum cuff healing around the titanium fixture.",
+      "Protocol to ensure solid bone fusion (osseointegration) and soft tissue healing around the fixture.",
     doList: [
-      "Rinse with prescribed Chlorhexidine Gluconate 0.12% oral rinse twice daily without vigorous swishing.",
+      "Rinse gently with prescribed Chlorhexidine mouthwash twice daily.",
       "Maintain a strictly soft diet for 7–10 days post-surgery.",
-      "Keep head elevated on two pillows during sleep for the first two nights.",
-      "Complete the entire cycle of prescribed antibiotics even if you feel completely fine.",
+      "Sleep with head elevated on two pillows for the first 2 nights.",
+      "Complete the entire cycle of prescribed antibiotic medications.",
     ],
     dontList: [
-      "DO NOT touch, probe, or press your tongue against the implant site or surgical sutures.",
-      "DO NOT wear any removable temporary denture without explicit clearance from the surgeon.",
-      "DO NOT brush directly over the surgical stitches for the first 3 days (brush adjacent teeth gently).",
-      "DO NOT smoke—smoking increases dental implant failure rates by up to 300%.",
+      "DO NOT touch or press tongue against the implant site or sutures.",
+      "DO NOT wear removable dentures without explicit clearance.",
+      "DO NOT smoke—smoking significantly increases implant failure rates.",
     ],
     timeline: [
       {
         day: "Day 1–3",
-        milestone: "Soft Tissue Hemostasis",
-        instructions:
-          "Minor oozing and gum swelling. Use ice packs on outer jaw. Avoid pressure on surgical site.",
+        milestone: "Hemostasis",
+        instructions: "Minor oozing and gum swelling. Use ice packs on jawline.",
       },
       {
         day: "Week 1–2",
-        milestone: "Suture Removal or Dissolution",
-        instructions:
-          "Sutures dissolve or are removed at follow-up. Gums pink up and seal around healing abutment.",
+        milestone: "Suture Check",
+        instructions: "Sutures dissolve or are removed. Gums seal around healing abutment.",
       },
       {
         day: "Month 2–4",
-        milestone: "Osseointegration (Bone Fusion)",
-        instructions:
-          "Titanium microscopic fusion with jawbone progresses. Final 3D scan and crown fabrication scheduled.",
+        milestone: "Osseointegration",
+        instructions: "Titanium fuses with jawbone. 3D scan scheduled for crown design.",
       },
     ],
   },
   {
     id: "whitening",
-    title: "Philips Zoom! Laser Teeth Whitening",
-    category: "Cosmetic",
-    badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    title: "Laser Teeth Whitening",
+    category: "Cosmetics",
     icon: SparklesIcon,
     summary:
-      "Strict 48-hour 'White Diet' rules to prevent staining porous enamel and strategies for temporary sensitivity.",
+      "Strict 48-hour White Diet rules to protect porous enamel and eliminate temporary tooth sensitivity.",
     doList: [
-      "Follow the strict 'White Diet' for 48 hours: Milk, water, plain yogurt, white rice, skinless chicken breast, cauliflower.",
-      "Brush with potassium nitrate desensitizing toothpaste (Sensodyne) twice daily.",
-      "Drink plenty of room-temperature water to rehydrate enamel tubules.",
+      "Follow the White Diet for 48 hours: Milk, water, plain yogurt, rice, chicken.",
+      "Use potassium nitrate desensitizing toothpaste (Sensodyne) twice daily.",
+      "Drink room-temperature water to keep enamel tubules hydrated.",
     ],
     dontList: [
-      "DO NOT drink coffee, tea, red wine, dark sodas, or fruit juices for 48 hours.",
-      "DO NOT eat staining foods: tomato sauce, mustard, ketchup, berries, soy sauce, curries.",
-      "DO NOT consume ice-cold or scalding hot liquids if transient 'zingers' (nerve pulses) occur.",
-      "DO NOT use tobacco products for at least 48 hours.",
+      "DO NOT drink coffee, tea, red wine, or dark sodas for 48 hours.",
+      "DO NOT eat staining foods (curries, ketchup, tomato sauce, berries).",
+      "DO NOT consume ice-cold liquids if transient nerve zingers occur.",
     ],
     timeline: [
       {
-        day: "First 24 Hours",
-        milestone: "Enamel Tubule Dehydration & Sensitivity",
-        instructions:
-          "Transient sharp zings can occur as teeth rehydrate. Take Ibuprofen if required.",
+        day: "First 24h",
+        milestone: "Sensitivity Peak",
+        instructions: "Transient nerve zingers can occur. Mild analgesics help if needed.",
       },
       {
-        day: "Day 2 (24–48 Hours)",
-        milestone: "Enamel Remineralization",
-        instructions:
-          "Enamel re-hardens with salivary minerals. Continue avoiding chromogenic (staining) foods.",
+        day: "Day 2",
+        milestone: "Remineralization",
+        instructions: "Enamel re-hardens with salivary minerals. Continue White Diet.",
       },
       {
         day: "Day 3+",
-        milestone: "Stable Aesthetic Shade",
-        instructions:
-          "Final bright shade stabilizes. Normal diet can resume. Floss daily to maintain luminosity.",
+        milestone: "Shade Stabilized",
+        instructions: "Bright aesthetic shade locks in. Normal diet safely resumes.",
       },
     ],
   },
@@ -226,68 +205,51 @@ export default function AftercarePage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-10">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-background border border-primary/20 p-8 sm:p-10">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-              <div className="space-y-4 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-                  <HeartHandshakeIcon className="size-4 text-primary" />
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                    Hospital Post-Operative Care Portal
-                  </span>
-                </div>
-                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-                  Aftercare Instructions & Recovery Guides
-                </h1>
-                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                  Clinically verified post-procedure instructions, milestone tracking, and complications guidance prepared by our dental surgeons to ensure rapid, painless healing.
-                </p>
+      <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* HEADER STRIP */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-border/60">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-2">
+                <HeartHandshakeIcon className="size-3.5" />
+                Post-Operative Recovery
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                <Button
-                  onClick={() => setIsTriageOpen(true)}
-                  className="bg-red-600 hover:bg-red-700 text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-xl shadow-md"
-                >
-                  <AlertTriangleIcon className="size-4 mr-2" />
-                  Experiencing Complications?
-                </Button>
-              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                Aftercare Guides & Healing Protocols
+              </h1>
+              <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+                Clinically verified recovery milestones, do's and don'ts, and red flag warnings.
+              </p>
             </div>
+
+            <Button
+              onClick={() => setIsTriageOpen(true)}
+              className="bg-red-600 hover:bg-red-700 text-white font-medium text-xs h-9 px-4 rounded-xl shadow-xs shrink-0 self-start md:self-auto"
+            >
+              <AlertTriangleIcon className="size-3.5 mr-1.5" />
+              Complications Triage
+            </Button>
           </div>
 
-          <Card className="border-2 border-red-500/40 bg-gradient-to-r from-red-500/10 via-card to-card p-6 shadow-md">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <div className="size-10 rounded-xl bg-red-500/20 flex items-center justify-center shrink-0 border border-red-500/30">
-                  <ShieldAlertIcon className="size-5 text-red-500" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-base font-bold text-red-400 flex items-center gap-2">
-                    When to Contact the Hospital Immediately (Red Flags)
-                  </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Contact our 24/7 Trauma Desk if you experience: body temperature &gt; 101°F (38.3°C), active bright-red hemorrhage that doesn't slow with gauze pressure after 4 hours, swelling that spreads to your throat or eye, or difficulty breathing or swallowing.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
-                <a href="tel:18004336824" className="w-full md:w-auto">
-                  <Button
-                    size="sm"
-                    className="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold h-10 px-4"
-                  >
-                    <PhoneCallIcon className="size-3.5 mr-2" />
-                    Call Trauma Desk: +1 (800) 433-6824
-                  </Button>
-                </a>
-              </div>
+          {/* COMPACT RED FLAGS ALERT STRIP */}
+          <div className="p-3.5 rounded-xl border border-red-500/30 bg-red-500/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 text-xs">
+              <ShieldAlertIcon className="size-4 text-red-500 shrink-0" />
+              <span className="text-foreground">
+                <strong className="text-red-500">Immediate hospital contact required if:</strong> Fever &gt; 101°F, continuous bleeding after 4 hours, or difficulty swallowing.
+              </span>
             </div>
-          </Card>
+            <a
+              href="tel:18004336824"
+              className="text-xs font-mono font-bold text-red-500 hover:underline shrink-0 flex items-center gap-1"
+            >
+              <PhoneCallIcon className="size-3" />
+              Trauma Hotline: +1 (800) 433-6824
+            </a>
+          </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-border/60">
+          {/* PROCEDURE TABS */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-border/60">
             {AFTERCARE_GUIDES.map((guide) => {
               const GuideIcon = guide.icon;
               return (
@@ -295,9 +257,9 @@ export default function AftercarePage() {
                   key={guide.id}
                   type="button"
                   onClick={() => setSelectedGuideId(guide.id)}
-                  className={`py-2.5 px-4 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
+                  className={`py-2 px-3.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-2 ${
                     selectedGuideId === guide.id
-                      ? "bg-primary text-white shadow-md"
+                      ? "bg-primary text-white shadow-xs font-semibold"
                       : "bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -308,117 +270,122 @@ export default function AftercarePage() {
             })}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* BALANCED 2-COLUMN LAYOUT */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* LEFT 2 COLUMNS: DO'S, DON'TS & TIMELINE */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="p-6 rounded-3xl bg-card border border-border/80 shadow-sm space-y-4">
-                <div className="flex items-center justify-between">
+              {/* GUIDE DETAILS */}
+              <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
+                <CardHeader className="p-5 pb-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 text-primary shrink-0">
-                      <CurrentGuideIcon className="size-6" />
+                    <div className="p-2 bg-primary/10 rounded-xl border border-primary/20 text-primary">
+                      <CurrentGuideIcon className="size-5" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-foreground">
+                      <CardTitle className="text-lg font-bold text-foreground">
                         {currentGuide.title}
-                      </h2>
-                      <Badge className={currentGuide.badgeColor} variant="outline">
-                        {currentGuide.category}
-                      </Badge>
+                      </CardTitle>
+                      <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                        {currentGuide.summary}
+                      </CardDescription>
                     </div>
                   </div>
-                </div>
+                </CardHeader>
 
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {currentGuide.summary}
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                  <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/20 space-y-3">
-                    <div className="flex items-center gap-2 text-green-400 font-bold text-xs uppercase tracking-wide">
-                      <CheckCircle2Icon className="size-4" />
-                      <span>Essential Do's</span>
-                    </div>
-                    <ul className="space-y-2 text-xs text-foreground">
-                      {currentGuide.doList.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="text-green-500 font-bold">•</span>
-                          <span className="leading-relaxed">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/20 space-y-3">
-                    <div className="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wide">
-                      <AlertTriangleIcon className="size-4" />
-                      <span>Critical Don'ts (Avoid)</span>
-                    </div>
-                    <ul className="space-y-2 text-xs text-foreground">
-                      {currentGuide.dontList.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="text-red-500 font-bold">•</span>
-                          <span className="leading-relaxed">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 rounded-3xl bg-card border border-border/80 shadow-sm space-y-4">
-                <h3 className="text-lg font-bold flex items-center gap-2">
-                  <ClockIcon className="size-5 text-primary" />
-                  Day-by-Day Recovery Timeline
-                </h3>
-
-                <div className="space-y-4">
-                  {currentGuide.timeline.map((step, idx) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-2xl bg-muted/20 border border-border/50 space-y-1 text-xs"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-primary text-sm">
-                          {step.day}
-                        </span>
-                        <Badge variant="outline" className="text-[10px]">
-                          {step.milestone}
-                        </Badge>
+                <CardContent className="p-5 pt-2 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* DO LIST */}
+                    <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 space-y-2.5">
+                      <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-xs uppercase tracking-wide">
+                        <CheckCircle2Icon className="size-3.5" />
+                        <span>Recommended Do's</span>
                       </div>
-                      <p className="text-muted-foreground leading-relaxed pt-1">
-                        {step.instructions}
-                      </p>
+                      <ul className="space-y-1.5 text-xs text-foreground">
+                        {currentGuide.doList.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-1.5 leading-snug">
+                            <span className="text-emerald-500 font-bold">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  ))}
-                </div>
-              </div>
+
+                    {/* DONT LIST */}
+                    <div className="p-3.5 rounded-xl bg-red-500/5 border border-red-500/20 space-y-2.5">
+                      <div className="flex items-center gap-1.5 text-red-500 font-bold text-xs uppercase tracking-wide">
+                        <AlertTriangleIcon className="size-3.5" />
+                        <span>Critical Don'ts (Avoid)</span>
+                      </div>
+                      <ul className="space-y-1.5 text-xs text-foreground">
+                        {currentGuide.dontList.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-1.5 leading-snug">
+                            <span className="text-red-500 font-bold">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* TIMELINE */}
+              <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
+                <CardHeader className="p-5 pb-3">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <ClockIcon className="size-4 text-primary" />
+                    Recovery Milestones
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-5 pt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {currentGuide.timeline.map((step, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-xl bg-muted/20 border border-border/50 space-y-1 text-xs"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-primary">{step.day}</span>
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">
+                            {step.milestone}
+                          </Badge>
+                        </div>
+                        <p className="text-muted-foreground text-[11px] leading-tight pt-1">
+                          {step.instructions}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
+            {/* RIGHT COLUMN: INTERACTIVE CHECKLIST & AI VOICE */}
             <div className="space-y-6">
-              <Card className="border border-border/80 bg-card/90 shadow-sm">
-                <CardHeader className="pb-3">
+              {/* HEALING CHECKLIST */}
+              <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
+                <CardHeader className="p-5 pb-3">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
                     <CheckCircle2Icon className="size-4 text-primary" />
-                    Interactive Healing Checklist
+                    Healing Checklist
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Mark tasks complete as you progress through recovery
+                    Track your daily recovery progression
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3 pt-0 text-xs">
+                <CardContent className="p-5 pt-0 space-y-2 text-xs">
                   {[
-                    "Biting gauze pressure applied for 45 min",
-                    "Cold ice pack applied to cheek in 15-min intervals",
+                    "Gauze pressure applied as directed",
+                    "Ice pack applied at 15-min intervals",
                     "Prescribed pain relief taken on schedule",
-                    "Hydrated with room-temperature water (NO straws)",
-                    "Soft food meal consumed without hot spices",
-                    "Gently rested with head elevated on pillows",
-                    "Warm salt water rinses completed (Day 2+)",
+                    "Hydrated with water (no straws)",
+                    "Soft meals eaten without hot spices",
                   ].map((task, i) => {
                     const isChecked = !!checkedItems[`${currentGuide.id}-${i}`];
                     return (
                       <label
                         key={i}
-                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                        className={`flex items-start gap-2 p-2 rounded-lg border cursor-pointer transition-all ${
                           isChecked
                             ? "bg-primary/10 border-primary/30 text-foreground"
                             : "bg-muted/10 border-border/60 text-muted-foreground hover:bg-muted/20"
@@ -439,29 +406,30 @@ export default function AftercarePage() {
                 </CardContent>
               </Card>
 
-              <Card className="border border-primary/20 bg-gradient-to-br from-primary/10 to-card p-5 shadow-sm space-y-4">
+              {/* AI RECOVERY VOICE CARD */}
+              <Card className="border border-primary/20 bg-gradient-to-br from-primary/10 to-card p-5 rounded-2xl shadow-xs space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-2xl bg-primary/20 flex items-center justify-center text-primary">
-                    <MicIcon className="size-5" />
+                  <div className="size-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+                    <MicIcon className="size-4" />
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-foreground">
                       Ask Riley (AI Dental Voice)
                     </h4>
                     <p className="text-[11px] text-muted-foreground">
-                      Unsure if your healing is normal? Talk to Riley 24/7.
+                      Instant audio answers for recovery questions
                     </p>
                   </div>
                 </div>
 
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Our Vapi AI Assistant can answer questions like "Is bleeding normal on day 2?" or "When can I drink warm coffee again?"
+                  Have questions about bleeding, medication, or food? Speak directly with Riley 24/7.
                 </p>
 
-                <Link href="/voice">
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-white text-xs font-semibold h-9 rounded-xl">
-                    Launch Voice Consultation
-                    <ArrowRightIcon className="size-3.5 ml-1.5" />
+                <Link href="/voice" className="block pt-1">
+                  <Button className="w-full bg-primary hover:bg-primary/90 text-white text-xs font-semibold h-8 rounded-xl flex items-center justify-center gap-1.5">
+                    Start Voice Chat
+                    <ArrowRightIcon className="size-3.5" />
                   </Button>
                 </Link>
               </Card>

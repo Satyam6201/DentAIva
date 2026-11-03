@@ -10,13 +10,10 @@ import {
   FileTextIcon,
   PrinterIcon,
   AlertTriangleIcon,
-  HeartPulseIcon,
   PillIcon,
   PlusIcon,
   UserCheckIcon,
-  PhoneCallIcon,
   ClockIcon,
-  QrCodeIcon,
   XIcon,
   CalendarIcon,
   ActivityIcon,
@@ -26,6 +23,7 @@ import { useUserAppointments } from "@/hooks/use-appointment";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Medication {
   id: string;
@@ -40,43 +38,40 @@ interface Medication {
 const DEFAULT_MEDICATIONS: Medication[] = [
   {
     id: "med-1",
-    name: "Amoxicillin (Oral Capsule)",
+    name: "Amoxicillin",
     dosage: "500 mg",
-    frequency: "Every 8 hours (Three times daily after meals)",
-    doctor: "Dr. Marcus Vance (Oral Surgery)",
+    frequency: "Every 8 hours with meals",
+    doctor: "Dr. Marcus Vance",
     daysRemaining: 4,
     purpose: "Prophylactic post-surgical antibacterial coverage",
   },
   {
     id: "med-2",
-    name: "Ibuprofen (Anti-inflammatory)",
+    name: "Ibuprofen",
     dosage: "600 mg",
-    frequency: "Every 6 hours as needed for discomfort",
-    doctor: "Dr. Alexander Thorne (Endodontics)",
+    frequency: "Every 6 hours as needed",
+    doctor: "Dr. Alexander Thorne",
     daysRemaining: 2,
-    purpose: "Periapical pain and swelling management",
+    purpose: "Pain and inflammation relief",
   },
   {
     id: "med-3",
-    name: "Chlorhexidine Gluconate 0.12%",
+    name: "Chlorhexidine 0.12%",
     dosage: "15 ml oral rinse",
-    frequency: "Twice daily after tooth brushing (Do not swallow)",
-    doctor: "Dr. Rachel Kim (Periodontics)",
+    frequency: "Twice daily after brushing",
+    doctor: "Dr. Rachel Kim",
     daysRemaining: 10,
-    purpose: "Antiseptic plaque inhibition and gingival healing",
+    purpose: "Antiseptic plaque control and gum healing",
   },
 ];
 
 export default function RecordsPage() {
-  const { user, isLoaded } = useUser();
+  const { user } = useUser();
   const { data: appointments = [], isLoading: appointmentsLoading } =
     useUserAppointments();
 
-  const printAreaRef = useRef<HTMLDivElement>(null);
-
-  // Patient profile states
-  const [bloodType, setBloodType] = useState("O+ Positive");
-  const [emergencyContact, setEmergencyContact] = useState({
+  const [bloodType] = useState("O+ Positive");
+  const [emergencyContact] = useState({
     name: "Eleanor Vance",
     relationship: "Spouse",
     phone: "+1 (555) 321-7890",
@@ -84,8 +79,8 @@ export default function RecordsPage() {
 
   const [allergies, setAllergies] = useState<string[]>([
     "Penicillin (Mild Rash)",
-    "Latex (Skin Irritation)",
-    "Epinephrine (Tachycardia sensitivity)",
+    "Latex (Skin Sensitivity)",
+    "Epinephrine (Tachycardia)",
   ]);
   const [newAllergy, setNewAllergy] = useState("");
 
@@ -95,12 +90,10 @@ export default function RecordsPage() {
   ]);
   const [newCondition, setNewCondition] = useState("");
 
-  const [medications, setMedications] =
-    useState<Medication[]>(DEFAULT_MEDICATIONS);
+  const [medications] = useState<Medication[]>(DEFAULT_MEDICATIONS);
   const [selectedAppointmentForPass, setSelectedAppointmentForPass] =
     useState<any>(null);
 
-  // Load saved health card data from local storage if available
   useEffect(() => {
     try {
       const savedAllergies = localStorage.getItem("dentaiva_allergies");
@@ -108,11 +101,8 @@ export default function RecordsPage() {
 
       const savedConditions = localStorage.getItem("dentaiva_conditions");
       if (savedConditions) setConditions(JSON.parse(savedConditions));
-
-      const savedBlood = localStorage.getItem("dentaiva_blood_type");
-      if (savedBlood) setBloodType(savedBlood);
     } catch (e) {
-      console.error("Local storage load error", e);
+      console.error("Local storage error", e);
     }
   }, []);
 
@@ -122,7 +112,7 @@ export default function RecordsPage() {
     setAllergies(updated);
     localStorage.setItem("dentaiva_allergies", JSON.stringify(updated));
     setNewAllergy("");
-    toast.success("Medical allergy added to health record");
+    toast.success("Medical allergy recorded");
   };
 
   const removeAllergy = (index: number) => {
@@ -138,7 +128,7 @@ export default function RecordsPage() {
     setConditions(updated);
     localStorage.setItem("dentaiva_conditions", JSON.stringify(updated));
     setNewCondition("");
-    toast.success("Clinical medical condition recorded");
+    toast.success("Condition recorded");
   };
 
   const removeCondition = (index: number) => {
@@ -169,60 +159,50 @@ export default function RecordsPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-10">
-          {/* HEADER SECTION */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-background border border-primary/20 p-8 sm:p-10">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-              <div className="space-y-4 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-                  <FileTextIcon className="size-4 text-primary" />
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                    Hospital Electronic Health Records (EHR)
-                  </span>
-                </div>
-                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-                  Patient Health Vault & Dental Records
-                </h1>
-                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                  Confidential electronic dental health profile detailing verified procedure logs, active prescriptions, drug allergies, emergency contacts, and digital clinical visit passes.
-                </p>
+      <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* HEADER STRIP */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-2">
+                <FileTextIcon className="size-3.5" />
+                Electronic Health Records
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-                <Button
-                  onClick={() => handlePrint()}
-                  className="bg-primary hover:bg-primary/90 text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-xl shadow-md"
-                >
-                  <PrinterIcon className="size-4 mr-2" />
-                  Print Official Clinic Pass
-                </Button>
-              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                Patient Health Vault & Records
+              </h1>
+              <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+                Verified clinical history, active prescriptions, allergies, and printable hospital visit pass.
+              </p>
             </div>
+
+            <Button
+              onClick={() => handlePrint()}
+              className="bg-primary hover:bg-primary/90 text-white font-medium text-xs h-9 px-4 rounded-xl shadow-xs shrink-0 self-start sm:self-auto"
+            >
+              <PrinterIcon className="size-3.5 mr-1.5" />
+              Print Clinic Pass
+            </Button>
           </div>
 
-          {/* PATIENT VITAL CARD GRID */}
+          {/* TOP 2-CARD GRID: PROFILE & MEDICAL ALERTS */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* DIGITAL PATIENT CARD */}
-            <Card className="border border-border/80 bg-gradient-to-br from-card to-card/90 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-bl-full pointer-events-none" />
-              <CardHeader className="pb-3">
+            <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
+              <CardHeader className="p-5 pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                  <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <UserCheckIcon className="size-4 text-primary" />
-                    Digital Patient ID Card
+                    Patient ID Card
                   </CardTitle>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
                     VERIFIED
                   </span>
                 </div>
-                <CardDescription className="text-xs">
-                  DentAIva Clinical Network
-                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3 pt-0 text-xs">
-                <div className="flex items-center gap-3 py-2 border-b border-border/50">
-                  <div className="size-12 rounded-full overflow-hidden bg-primary/10 relative shrink-0">
+              <CardContent className="p-5 pt-0 space-y-3 text-xs">
+                <div className="flex items-center gap-3 py-1 border-b border-border/40">
+                  <div className="size-11 rounded-full overflow-hidden bg-primary/10 relative shrink-0">
                     {user?.imageUrl ? (
                       <Image
                         src={user.imageUrl}
@@ -236,28 +216,28 @@ export default function RecordsPage() {
                       </div>
                     )}
                   </div>
-                  <div>
-                    <div className="font-bold text-sm text-foreground">
+                  <div className="overflow-hidden">
+                    <div className="font-bold text-sm text-foreground truncate">
                       {patientName}
                     </div>
-                    <div className="text-muted-foreground text-[11px] font-mono">
-                      {user?.emailAddresses?.[0]?.emailAddress}
+                    <div className="text-muted-foreground text-[11px] font-mono truncate">
+                      {user?.primaryEmailAddress?.emailAddress}
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+                <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-xs">
                   <div>
                     <span className="text-muted-foreground block text-[10px]">PATIENT ID</span>
                     <span className="font-bold text-foreground">{patientId}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[10px]">BLOOD GROUP</span>
-                    <span className="font-bold text-red-400">{bloodType}</span>
+                    <span className="text-muted-foreground block text-[10px]">BLOOD TYPE</span>
+                    <span className="font-bold text-red-500">{bloodType}</span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-border/50 text-[11px]">
+                <div className="pt-2 border-t border-border/40 text-[11px]">
                   <span className="text-muted-foreground block text-[10px]">EMERGENCY CONTACT</span>
                   <div className="font-medium text-foreground">
                     {emergencyContact.name} ({emergencyContact.relationship})
@@ -269,33 +249,33 @@ export default function RecordsPage() {
               </CardContent>
             </Card>
 
-            {/* ALLERGIES & CLINICAL ALERTS */}
-            <Card className="border border-red-500/30 bg-card/90 shadow-sm md:col-span-2">
-              <CardHeader className="pb-3">
+            {/* MEDICAL ALERTS & CONDITIONS */}
+            <Card className="border border-red-500/30 bg-card/90 rounded-2xl shadow-xs md:col-span-2">
+              <CardHeader className="p-5 pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base font-bold flex items-center gap-2 text-red-400">
-                    <AlertTriangleIcon className="size-4 text-red-500" />
+                  <CardTitle className="text-sm font-bold flex items-center gap-2 text-red-500">
+                    <AlertTriangleIcon className="size-4" />
                     Medical Alerts & Drug Allergies
                   </CardTitle>
-                  <Badge variant="outline" className="text-[10px] text-red-400 border-red-500/30">
-                    High Clinical Priority
+                  <Badge variant="outline" className="text-[10px] text-red-500 border-red-500/30">
+                    Clinical Priority
                   </Badge>
                 </div>
                 <CardDescription className="text-xs">
-                  Alerts attending dentists before prescribing antibiotics or administering local anesthetics
+                  Recorded sensitivities checked before prescribing medications or administering local anesthesia
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4 pt-0 text-xs">
-                {/* ALLERGIES LIST */}
-                <div className="space-y-2">
-                  <span className="text-[11px] font-semibold text-muted-foreground uppercase">
+              <CardContent className="p-5 pt-0 space-y-3.5 text-xs">
+                {/* ALLERGIES */}
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                     Known Allergies ({allergies.length}):
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {allergies.map((allergy, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/30"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20"
                       >
                         {allergy}
                         <button
@@ -310,42 +290,42 @@ export default function RecordsPage() {
                     ))}
                   </div>
 
-                  <div className="flex gap-2 pt-1">
+                  <div className="flex gap-2 pt-1 max-w-md">
                     <Input
-                      placeholder="Add allergy (e.g. Sulfa, NSAIDs, Codeine)..."
+                      placeholder="Add allergy (e.g. Sulfa, NSAIDs)..."
                       value={newAllergy}
                       onChange={(e) => setNewAllergy(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && addAllergy()}
-                      className="h-8 text-xs bg-muted/30 max-w-sm"
+                      className="h-8 text-xs bg-muted/20"
                     />
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={addAllergy}
-                      className="h-8 px-2 text-xs"
+                      className="h-8 px-2.5 text-xs shrink-0"
                     >
                       <PlusIcon className="size-3.5 mr-1" />
-                      Add Alert
+                      Add
                     </Button>
                   </div>
                 </div>
 
                 {/* SYSTEMIC CONDITIONS */}
-                <div className="space-y-2 pt-2 border-t border-border/50">
-                  <span className="text-[11px] font-semibold text-muted-foreground uppercase">
-                    Systemic Medical Conditions:
+                <div className="space-y-1.5 pt-2 border-t border-border/40">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                    Medical Conditions:
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {conditions.map((cond, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-500 border border-amber-500/20"
                       >
                         {cond}
                         <button
                           type="button"
                           onClick={() => removeCondition(idx)}
-                          className="hover:text-white"
+                          className="hover:text-foreground"
                           title="Remove condition"
                         >
                           <XIcon className="size-3" />
@@ -354,22 +334,22 @@ export default function RecordsPage() {
                     ))}
                   </div>
 
-                  <div className="flex gap-2 pt-1">
+                  <div className="flex gap-2 pt-1 max-w-md">
                     <Input
-                      placeholder="Add condition (e.g. Diabetes, Heart Valve, Bleeding Disorder)..."
+                      placeholder="Add condition (e.g. Hypertension)..."
                       value={newCondition}
                       onChange={(e) => setNewCondition(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && addCondition()}
-                      className="h-8 text-xs bg-muted/30 max-w-sm"
+                      className="h-8 text-xs bg-muted/20"
                     />
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={addCondition}
-                      className="h-8 px-2 text-xs"
+                      className="h-8 px-2.5 text-xs shrink-0"
                     >
                       <PlusIcon className="size-3.5 mr-1" />
-                      Add Condition
+                      Add
                     </Button>
                   </div>
                 </div>
@@ -377,52 +357,52 @@ export default function RecordsPage() {
             </Card>
           </div>
 
-          {/* ACTIVE PRESCRIPTIONS & MEDICATIONS */}
-          <Card className="border border-border/80 bg-card/90 shadow-sm">
-            <CardHeader className="pb-4">
+          {/* ACTIVE PRESCRIPTIONS */}
+          <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
+            <CardHeader className="p-5 pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-xl font-bold flex items-center gap-2">
-                    <PillIcon className="size-5 text-primary" />
-                    Active Dental Prescriptions & Medication Schedule
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <PillIcon className="size-4 text-primary" />
+                    Active Dental Prescriptions
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Current antibiotic, antiseptic, and analgesic regimens prescribed by attending dental surgeons
+                    Current medications prescribed by attending dental surgeons
                   </CardDescription>
                 </div>
-                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
-                  {medications.length} Active Regimens
+                <Badge variant="outline" className="text-xs font-mono">
+                  {medications.length} Regimens
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="p-5 pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {medications.map((med) => (
                   <div
                     key={med.id}
-                    className="p-4 rounded-2xl bg-muted/20 border border-border/70 space-y-3 relative flex flex-col justify-between"
+                    className="p-3.5 rounded-xl bg-muted/20 border border-border/50 space-y-2 text-xs flex flex-col justify-between"
                   >
                     <div className="space-y-1">
                       <div className="flex items-start justify-between gap-2">
-                        <span className="font-bold text-sm text-foreground">
+                        <span className="font-bold text-foreground text-sm">
                           {med.name}
                         </span>
-                        <Badge variant="outline" className="text-[10px] shrink-0 font-mono">
+                        <Badge variant="outline" className="text-[10px] font-mono shrink-0">
                           {med.dosage}
                         </Badge>
                       </div>
                       <p className="text-xs text-primary font-medium">
                         {med.frequency}
                       </p>
-                      <p className="text-[11px] text-muted-foreground leading-relaxed">
-                        Purpose: {med.purpose}
+                      <p className="text-[11px] text-muted-foreground leading-tight">
+                        {med.purpose}
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
+                    <div className="pt-2 border-t border-border/40 flex items-center justify-between text-[11px]">
                       <span className="text-muted-foreground">{med.doctor}</span>
-                      <span className="font-mono text-xs text-amber-400 font-semibold">
-                        {med.daysRemaining} days left
+                      <span className="font-mono text-xs text-amber-500 font-semibold">
+                        {med.daysRemaining}d left
                       </span>
                     </div>
                   </div>
@@ -431,50 +411,50 @@ export default function RecordsPage() {
             </CardContent>
           </Card>
 
-          {/* VERIFIED CLINICAL TREATMENT & APPOINTMENT HISTORY */}
-          <Card className="border border-border/80 bg-card/90 shadow-sm">
-            <CardHeader className="pb-4">
+          {/* CLINICAL TREATMENT HISTORY */}
+          <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
+            <CardHeader className="p-5 pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-xl font-bold flex items-center gap-2">
-                    <ActivityIcon className="size-5 text-primary" />
-                    Verified Clinical Treatment History
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <ActivityIcon className="size-4 text-primary" />
+                    Verified Treatment History
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Complete chronology of dental visits, attending specialists, and procedure outcomes
+                    Completed and scheduled clinical hospital appointments
                   </CardDescription>
                 </div>
-                <Badge variant="outline" className="text-xs">
-                  {appointments.length} Total Records
+                <Badge variant="outline" className="text-xs font-mono">
+                  {appointments.length} Total
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 pt-0">
+            <CardContent className="p-5 pt-0">
               {appointmentsLoading ? (
-                <div className="text-center py-10 text-muted-foreground text-sm">
+                <div className="text-center py-8 text-muted-foreground text-xs">
                   Loading verified clinic records...
                 </div>
               ) : appointments.length === 0 ? (
-                <div className="text-center py-12 bg-muted/10 rounded-2xl border space-y-3">
-                  <CalendarIcon className="size-10 text-muted-foreground mx-auto" />
-                  <p className="text-sm text-muted-foreground">
+                <div className="text-center py-8 bg-muted/10 rounded-xl border space-y-2">
+                  <CalendarIcon className="size-8 text-muted-foreground mx-auto" />
+                  <p className="text-xs text-muted-foreground">
                     No clinical appointments recorded yet.
                   </p>
-                  <a href="/appointments">
-                    <Button size="sm" className="bg-primary text-white text-xs">
-                      Schedule First Hospital Consultation
+                  <Link href="/appointments">
+                    <Button size="sm" className="bg-primary text-white text-xs h-8">
+                      Schedule Consultation
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {appointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="p-4 rounded-2xl bg-card border border-border/70 hover:border-primary/40 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs"
+                      className="p-3 rounded-xl bg-card border border-border/70 hover:border-primary/40 transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
                     >
-                      <div className="flex items-center gap-3.5">
-                        <div className="size-11 rounded-full overflow-hidden bg-primary/10 relative shrink-0">
+                      <div className="flex items-center gap-3">
+                        <div className="size-9 rounded-full overflow-hidden bg-primary/10 relative shrink-0">
                           {appointment.doctorImageUrl ? (
                             <img
                               src={appointment.doctorImageUrl}
@@ -482,44 +462,41 @@ export default function RecordsPage() {
                               className="size-full object-cover"
                             />
                           ) : (
-                            <div className="size-full flex items-center justify-center font-bold text-primary">
+                            <div className="size-full flex items-center justify-center font-bold text-primary text-xs">
                               DR
                             </div>
                           )}
                         </div>
 
-                        <div className="space-y-1">
+                        <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-sm text-foreground">
+                            <span className="font-bold text-foreground">
                               {appointment.doctorName}
                             </span>
                             <Badge
                               className={
                                 appointment.status === "COMPLETED"
-                                  ? "bg-green-500/10 text-green-400 border-green-500/30 text-[10px]"
-                                  : "bg-blue-500/10 text-blue-400 border-blue-500/30 text-[10px]"
+                                  ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-[10px] py-0"
+                                  : "bg-blue-500/10 text-blue-500 border-blue-500/20 text-[10px] py-0"
                               }
                             >
                               {appointment.status}
                             </Badge>
                           </div>
-                          <div className="text-muted-foreground">
-                            Procedure / Reason:{" "}
-                            <span className="text-foreground font-medium">
-                              {appointment.reason || "General Consultation"}
-                            </span>
+                          <div className="text-[11px] text-muted-foreground">
+                            {appointment.reason || "General Consultation"}
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between md:justify-end gap-6">
-                        <div className="text-left md:text-right font-mono">
+                      <div className="flex items-center justify-between md:justify-end gap-4">
+                        <div className="text-left md:text-right font-mono text-[11px]">
                           <div className="font-semibold text-foreground">
-                            {format(new Date(appointment.date), "EEEE, MMM d, yyyy")}
+                            {format(new Date(appointment.date), "EEE, MMM d, yyyy")}
                           </div>
-                          <div className="text-muted-foreground text-[11px] flex items-center md:justify-end gap-1">
+                          <div className="text-muted-foreground flex items-center md:justify-end gap-1">
                             <ClockIcon className="size-3" />
-                            {appointment.time} (Local Clinic Time)
+                            {appointment.time}
                           </div>
                         </div>
 
@@ -527,10 +504,10 @@ export default function RecordsPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => handlePrint(appointment)}
-                          className="text-xs h-8 px-3 border-primary/30 hover:bg-primary/10"
+                          className="text-xs h-7 px-2.5 border-primary/30"
                         >
-                          <PrinterIcon className="size-3.5 mr-1" />
-                          Print Pass
+                          <PrinterIcon className="size-3 mr-1" />
+                          Pass
                         </Button>
                       </div>
                     </div>
@@ -541,13 +518,12 @@ export default function RecordsPage() {
           </Card>
         </div>
 
-        {/* PRINTABLE HOSPITAL CLINIC PASS (HIDDEN ON SCREEN, VISIBLE ON PRINT) */}
+        {/* PRINTABLE HOSPITAL CLINIC PASS */}
         <div className="hidden print:block print:p-8 print:bg-white print:text-black">
-          <div className="border-4 border-black p-8 rounded-2xl max-w-2xl mx-auto space-y-6">
-            {/* HOSPITAL HEADER */}
-            <div className="flex items-center justify-between border-b-2 border-black pb-4">
+          <div className="border-2 border-black p-6 rounded-xl max-w-xl mx-auto space-y-4">
+            <div className="flex items-center justify-between border-b-2 border-black pb-3">
               <div>
-                <h1 className="text-2xl font-black tracking-wider uppercase">
+                <h1 className="text-xl font-bold tracking-wide uppercase">
                   DentAIva Dental Hospital
                 </h1>
                 <p className="text-xs text-gray-600">
@@ -558,8 +534,8 @@ export default function RecordsPage() {
                 </p>
               </div>
               <div className="text-right">
-                <span className="text-xs font-mono font-bold px-2 py-1 border border-black rounded">
-                  OFFICIAL CLINIC PASS
+                <span className="text-xs font-mono font-bold px-2 py-0.5 border border-black rounded">
+                  OFFICIAL PASS
                 </span>
                 <div className="text-[10px] text-gray-500 mt-1">
                   Issued: {new Date().toLocaleDateString()}
@@ -567,16 +543,15 @@ export default function RecordsPage() {
               </div>
             </div>
 
-            {/* PATIENT & APPOINTMENT DETAILS */}
             <div className="grid grid-cols-2 gap-4 text-xs">
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <span className="text-gray-500 text-[10px] block">PATIENT NAME</span>
                 <strong className="text-sm block">{patientName}</strong>
                 <span className="text-gray-600 font-mono text-[11px]">
                   ID: {patientId} | Blood: {bloodType}
                 </span>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 <span className="text-gray-500 text-[10px] block">ATTENDING DENTIST</span>
                 <strong className="text-sm block">
                   {selectedAppointmentForPass?.doctorName || "Dr. Marcus Vance, DDS"}
@@ -587,26 +562,25 @@ export default function RecordsPage() {
               </div>
             </div>
 
-            <div className="p-3 bg-gray-100 rounded-lg border border-gray-300 grid grid-cols-2 gap-4 text-xs font-mono">
+            <div className="p-2.5 bg-gray-100 rounded border border-gray-300 grid grid-cols-2 gap-2 text-xs font-mono">
               <div>
-                <span className="text-gray-500 text-[10px] block">SCHEDULED DATE</span>
+                <span className="text-gray-500 text-[10px] block">DATE</span>
                 <strong>
                   {selectedAppointmentForPass
-                    ? format(new Date(selectedAppointmentForPass.date), "EEEE, MMMM d, yyyy")
+                    ? format(new Date(selectedAppointmentForPass.date), "EEEE, MMM d, yyyy")
                     : new Date().toLocaleDateString()}
                 </strong>
               </div>
               <div>
-                <span className="text-gray-500 text-[10px] block">SCHEDULED TIME</span>
+                <span className="text-gray-500 text-[10px] block">TIME</span>
                 <strong>
                   {selectedAppointmentForPass?.time || "10:00 AM"}
                 </strong>
               </div>
             </div>
 
-            {/* CLINICAL ALLERGIES WARNING */}
-            <div className="p-3 border-2 border-dashed border-red-500 rounded-lg text-xs space-y-1">
-              <span className="font-bold text-red-600 block uppercase">
+            <div className="p-2.5 border border-red-500 rounded text-xs space-y-0.5">
+              <span className="font-bold text-red-600 block uppercase text-[10px]">
                 Medical Alerts / Drug Allergies
               </span>
               <p className="text-gray-700">
@@ -614,27 +588,13 @@ export default function RecordsPage() {
               </p>
             </div>
 
-            {/* PRE-VISIT INSTRUCTIONS */}
-            <div className="space-y-1 text-xs">
-              <span className="font-bold block uppercase tracking-wide">
-                Patient Pre-Visit Instructions:
-              </span>
-              <ul className="list-disc pl-5 space-y-0.5 text-gray-700 text-[11px]">
-                <li>Please arrive 15 minutes before your scheduled appointment time.</li>
-                <li>Bring a valid photo government ID and your insurance card if applicable.</li>
-                <li>Present this pass at the ground floor check-in reception desk.</li>
-              </ul>
-            </div>
-
-            {/* SIGNATURE & BARCODE */}
-            <div className="pt-6 border-t-2 border-black flex items-center justify-between text-xs">
+            <div className="pt-4 border-t border-black flex items-center justify-between text-xs">
               <div>
-                <div className="w-48 border-b border-black mb-1"></div>
-                <span className="text-[10px] text-gray-600">Attending Dental Surgeon Signature</span>
+                <div className="w-40 border-b border-black mb-1"></div>
+                <span className="text-[10px] text-gray-600">Surgeon Signature</span>
               </div>
               <div className="text-right font-mono text-[10px] text-gray-500">
                 <div>BARCODE: *DEN-{patientId.replace(/[^0-9]/g, "")}*</div>
-                <div>SECURE VERIFICATION TOKEN: OK</div>
               </div>
             </div>
           </div>

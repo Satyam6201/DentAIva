@@ -25,28 +25,23 @@ function AdminDashboardClient() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pt-28 pb-20">
-        {/* ADMIN WELCOME SECTION */}
-        <div className="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gradient-to-br from-primary/15 via-primary/5 to-background rounded-3xl p-6 sm:p-8 border border-primary/20 gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-              <div className="size-2 bg-primary rounded-full animate-pulse" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                Hospital Practice Management
-              </span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 pt-24 pb-16 space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-card border border-border/80 rounded-2xl p-5 sm:p-6 gap-4 shadow-xs">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-primary/10 rounded-full border border-primary/20 text-[11px] font-semibold text-primary uppercase tracking-wide">
+              <span className="size-1.5 bg-primary rounded-full animate-pulse" />
+              Practice Administration
             </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold mb-1 tracking-tight">
-                Welcome back, {user?.firstName || "Hospital Director"}!
-              </h1>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Oversee clinical operations, manage attending doctor schedules, review patient appointments, and monitor hospital throughput.
-              </p>
-            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+              Welcome back, {user?.firstName || "Administrator"}!
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
+              Oversee clinical operations, manage attending doctor profiles, and review hospital appointment throughput.
+            </p>
           </div>
 
-          <div className="hidden lg:flex items-center justify-center size-28 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl border border-primary/20 shrink-0">
-            <SettingsIcon className="size-12 text-primary" />
+          <div className="hidden lg:flex items-center justify-center size-14 bg-primary/10 rounded-xl border border-primary/20 text-primary shrink-0">
+            <SettingsIcon className="size-7 text-primary" />
           </div>
         </div>
 
@@ -71,31 +66,19 @@ function LoadingUI() {
     <div className="min-h-screen relative overflow-hidden bg-background">
       <Navbar />
 
-      {/* BACKGROUND EFFECTS */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-primary/5" />
-
-        {/* Glow Orbs */}
-        <div className="absolute top-32 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-32 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
         <div className="flex items-center justify-center h-[70vh]">
-          <div className="text-center space-y-6">
-            {/* SPINNER */}
-            <div className="relative w-20 h-20 mx-auto">
-              <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
-              <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-              <div className="absolute inset-3 rounded-full bg-primary/20 animate-pulse" />
+          <div className="text-center space-y-4">
+            <div className="relative size-12 mx-auto">
+              <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+              <div className="absolute inset-0 rounded-full border-2 border-primary border-t-transparent animate-spin" />
             </div>
 
-            {/* TEXT */}
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold tracking-wide">
-                Loading Admin Dashboard
+            <div className="space-y-1">
+              <h2 className="text-base font-semibold tracking-wide">
+                Loading Practice Portal
               </h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs">
                 Fetching clinical operations and practice statistics...
               </p>
             </div>

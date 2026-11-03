@@ -8,17 +8,12 @@ import TimeSelectionStep from "@/components/appointments/TimeSelectionStep";
 import Navbar from "@/components/Navbar";
 import { useBookAppointment, useUserAppointments } from "@/hooks/use-appointment";
 import { APPOINTMENT_TYPES, formatAppointmentDate, getSafeAvatarUrl } from "@/lib/utils";
-import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
   CalendarIcon,
   ClockIcon,
-  ShieldCheckIcon,
   PrinterIcon,
-  CheckCircle2Icon,
-  AlertCircleIcon,
-  StethoscopeIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,35 +96,29 @@ function AppointmentsPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-10">
-          {/* HEADER SECTION */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-background border border-primary/20 p-8 sm:p-10">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-                  <CalendarIcon className="size-3.5 text-primary" />
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                    Hospital Booking System
-                  </span>
-                </div>
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                  Book Clinical Consultation
-                </h1>
-                <p className="text-muted-foreground text-xs sm:text-sm">
-                  Schedule an in-person diagnostic or procedure visit with verified dentists
-                </p>
+      <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* HEADER STRIP */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-2">
+                <CalendarIcon className="size-3.5" />
+                Hospital Scheduling
               </div>
-
-              <div className="flex items-center gap-3">
-                <Link href="/records">
-                  <Button variant="outline" size="sm" className="h-9 text-xs rounded-xl border-primary/30">
-                    <PrinterIcon className="size-3.5 mr-1.5 text-primary" />
-                    Print Clinic Passes
-                  </Button>
-                </Link>
-              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                Book Clinical Consultation
+              </h1>
+              <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+                Select an attending dental surgeon, choose your preferred slot, and receive instant confirmation.
+              </p>
             </div>
+
+            <Link href="/records">
+              <Button variant="outline" size="sm" className="h-9 text-xs rounded-xl border-primary/30 shrink-0 self-start sm:self-auto">
+                <PrinterIcon className="size-3.5 mr-1.5 text-primary" />
+                Print Clinic Passes
+              </Button>
+            </Link>
           </div>
 
           <ProgressSteps currentStep={currentStep} />
@@ -169,17 +158,17 @@ function AppointmentsPage() {
             />
           )}
 
-          {/* SHOW EXISTING APPOINTMENTS FOR THE CURRENT USER */}
+          {/* EXISTING SCHEDULED APPOINTMENTS */}
           {userAppointments.length > 0 && (
-            <div className="pt-8 border-t border-border/70 space-y-4">
+            <div className="pt-6 border-t border-border/70 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold flex items-center gap-2">
-                    <CalendarIcon className="size-5 text-primary" />
-                    Your Scheduled Hospital Visits
+                  <h2 className="text-lg font-bold flex items-center gap-2 text-foreground">
+                    <CalendarIcon className="size-4 text-primary" />
+                    Your Scheduled Visits
                   </h2>
                   <p className="text-xs text-muted-foreground">
-                    Confirmed appointments and attending dental specialists
+                    Active clinic appointments and attending specialists
                   </p>
                 </div>
                 <Badge variant="outline" className="text-xs font-mono">
@@ -197,65 +186,61 @@ function AppointmentsPage() {
                   return (
                     <div
                       key={appointment.id}
-                      className="bg-card/90 border border-border/80 hover:border-primary/40 rounded-2xl p-5 shadow-sm space-y-4 transition-all"
+                      className="bg-card border border-border/80 hover:border-primary/40 rounded-2xl p-4 shadow-xs space-y-3 transition-all"
                     >
-                      <div className="flex items-center gap-3.5">
-                        <div className="size-12 rounded-xl overflow-hidden bg-primary/10 relative shrink-0 border border-primary/20">
+                      <div className="flex items-center gap-3">
+                        <div className="size-11 rounded-xl overflow-hidden bg-primary/10 relative shrink-0 border border-primary/20">
                           <Image
                             src={safeDoctorAvatar}
                             alt={appointment.doctorName}
                             fill
-                            sizes="48px"
+                            sizes="44px"
                             className="object-cover"
                           />
                         </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-sm text-foreground">
+                        <div className="flex-1 overflow-hidden">
+                          <p className="font-bold text-sm text-foreground truncate">
                             {appointment.doctorName}
                           </p>
-                          <p className="text-primary font-medium text-xs">
+                          <p className="text-primary font-medium text-xs truncate">
                             {appointment.reason || "General Consultation"}
                           </p>
                         </div>
                         <Badge
                           className={
                             appointment.status === "COMPLETED"
-                              ? "bg-green-500/10 text-green-400 border border-green-500/30 text-[10px]"
-                              : "bg-blue-500/10 text-blue-400 border border-blue-500/30 text-[10px]"
+                              ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px]"
+                              : "bg-blue-500/10 text-blue-500 border border-blue-500/20 text-[10px]"
                           }
                         >
                           {appointment.status}
                         </Badge>
                       </div>
 
-                      <div className="p-3 bg-muted/20 rounded-xl space-y-1.5 text-xs font-mono">
-                        <div className="flex items-center justify-between text-muted-foreground">
-                          <span className="flex items-center gap-1.5">
-                            <CalendarIcon className="size-3.5 text-primary" />
-                            {formatAppointmentDate(appointment.date, "EEEE, MMM d, yyyy")}
-                          </span>
+                      <div className="p-2.5 bg-muted/20 rounded-xl space-y-1 text-xs font-mono">
+                        <div className="flex items-center text-muted-foreground">
+                          <CalendarIcon className="size-3 text-primary mr-1.5" />
+                          <span>{formatAppointmentDate(appointment.date, "EEE, MMM d, yyyy")}</span>
                         </div>
-                        <div className="flex items-center justify-between text-muted-foreground">
-                          <span className="flex items-center gap-1.5">
-                            <ClockIcon className="size-3.5 text-primary" />
-                            {appointment.time} (Local Time)
-                          </span>
+                        <div className="flex items-center text-muted-foreground">
+                          <ClockIcon className="size-3 text-primary mr-1.5" />
+                          <span>{appointment.time} (Local Time)</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-1">
+                      <div className="flex items-center justify-between pt-1 text-xs">
                         <Link href="/records">
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 px-2 text-xs text-primary hover:text-primary hover:bg-primary/10"
+                            className="h-7 px-2 text-xs text-primary hover:text-primary hover:bg-primary/10"
                           >
-                            <PrinterIcon className="size-3.5 mr-1" />
+                            <PrinterIcon className="size-3 mr-1" />
                             Print Pass
                           </Button>
                         </Link>
                         <span className="text-[11px] text-muted-foreground">
-                          Floor 1 • Reception A
+                          Floor 1 &bull; Reception A
                         </span>
                       </div>
                     </div>
