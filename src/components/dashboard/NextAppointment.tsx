@@ -9,12 +9,16 @@ import { Button } from "../ui/button";
 async function NextAppointment() {
   const appointments = await getUserAppointments();
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   // filter for upcoming CONFIRMED appointments only (today or future)
   const upcomingAppointments =
     appointments?.filter((appointment) => {
-      const appointmentDate = parseISO(appointment.date);
-      const today = new Date();
-      const isUpcoming = isSameDay(appointmentDate, today) || isAfter(appointmentDate, today);
+      const parts = appointment.date.split("T")[0].split("-").map(Number);
+      const appointmentDate = new Date(parts[0], parts[1] - 1, parts[2]);
+      appointmentDate.setHours(0, 0, 0, 0);
+      const isUpcoming = appointmentDate.getTime() >= today.getTime();
       return isUpcoming && appointment.status === "CONFIRMED";
     }) || [];
 

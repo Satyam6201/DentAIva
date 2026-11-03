@@ -7,7 +7,7 @@ import ProgressSteps from "@/components/appointments/ProgressSteps";
 import TimeSelectionStep from "@/components/appointments/TimeSelectionStep";
 import Navbar from "@/components/Navbar";
 import { useBookAppointment, useUserAppointments } from "@/hooks/use-appointment";
-import { APPOINTMENT_TYPES, getSafeAvatarUrl } from "@/lib/utils";
+import { APPOINTMENT_TYPES, formatAppointmentDate, getSafeAvatarUrl } from "@/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -72,7 +72,7 @@ function AppointmentsPage() {
               body: JSON.stringify({
                 userEmail: appointment.patientEmail,
                 doctorName: appointment.doctorName,
-                appointmentDate: format(new Date(appointment.date), "EEEE, MMMM d, yyyy"),
+                appointmentDate: formatAppointmentDate(appointment.date),
                 appointmentTime: appointment.time,
                 appointmentType: appointmentType?.name,
                 duration: appointmentType?.duration,
@@ -232,7 +232,7 @@ function AppointmentsPage() {
                         <div className="flex items-center justify-between text-muted-foreground">
                           <span className="flex items-center gap-1.5">
                             <CalendarIcon className="size-3.5 text-primary" />
-                            {format(new Date(appointment.date), "EEEE, MMM d, yyyy")}
+                            {formatAppointmentDate(appointment.date, "EEEE, MMM d, yyyy")}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-muted-foreground">
@@ -273,7 +273,7 @@ function AppointmentsPage() {
           onOpenChange={setShowConfirmationModal}
           appointmentDetails={{
             doctorName: bookedAppointment.doctorName,
-            appointmentDate: format(new Date(bookedAppointment.date), "EEEE, MMMM d, yyyy"),
+            appointmentDate: formatAppointmentDate(bookedAppointment.date),
             appointmentTime: bookedAppointment.time,
             userEmail: bookedAppointment.patientEmail,
           }}

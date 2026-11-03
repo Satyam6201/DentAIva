@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,8 +14,8 @@ export const MALE_DOCTOR_AVATARS = [
 ];
 
 export const FEMALE_DOCTOR_AVATARS = [
-  "https://images.unsplash.com/photo-1594824813596-f94e24eb2913?w=256&auto=format&fit=crop&q=80",
   "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=256&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1594824813596-f94e24eb2913?w=256&auto=format&fit=crop&q=80",
   "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=256&auto=format&fit=crop&q=80",
   "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=256&auto=format&fit=crop&q=80",
 ];
@@ -40,7 +41,7 @@ export function getSafeAvatarUrl(
   return url;
 }
 
-// phone formatting function for US numbers
+// Phone formatting function for US numbers
 export const formatPhoneNumber = (value: string) => {
   if (!value) return value;
 
@@ -91,3 +92,27 @@ export const APPOINTMENT_TYPES = [
   { id: "consultation", name: "Consultation", duration: "30 min", price: "$75" },
   { id: "emergency", name: "Emergency Visit", duration: "30 min", price: "$150" },
 ];
+
+/**
+ * Parses and formats an appointment date string reliably without timezone shifts.
+ */
+export function formatAppointmentDate(
+  dateStr: string | Date,
+  formatStr: string = "EEEE, MMMM d, yyyy"
+): string {
+  if (!dateStr) return "";
+
+  if (dateStr instanceof Date) {
+    return format(dateStr, formatStr);
+  }
+
+  const parts = dateStr.split("T")[0].split("-");
+  if (parts.length === 3) {
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    return format(new Date(year, month, day), formatStr);
+  }
+
+  return format(new Date(dateStr), formatStr);
+}
