@@ -1,54 +1,52 @@
 "use client";
+
 import AdminStats from "@/components/admin/AdminStats";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
+import RecentAppointments from "@/components/admin/RecentAppointments";
 import Navbar from "@/components/Navbar";
-import { useGetAppointments } from "@/hooks/use-appointment";
-import { useGetDoctors } from "@/hooks/use-doctors";
+import { useAdminDashboardStats } from "@/hooks/use-appointment";
 import { useUser } from "@clerk/nextjs";
 import { SettingsIcon } from "lucide-react";
- 
 
 function AdminDashboardClient() {
-    const { user } = useUser();
-    const { data: doctors = [], isLoading: doctorsLoading } = useGetDoctors();
-    const { data: appointments = [], isLoading: appointmentsLoading } = useGetAppointments();
+  const { user } = useUser();
+  const { data: serverStats, isLoading: statsLoading } = useAdminDashboardStats();
 
-     // calculate stats from real data
-    const stats = {
-       totalDoctors: doctors.length,
-       activeDoctors: doctors.filter((doc) => doc.isActive).length,
-       totalAppointments: appointments.length,
-       completedAppointments: appointments.filter((app) => app.status === "COMPLETED").length,
-    };
+  const stats = {
+    totalDoctors: serverStats?.totalDoctors ?? 0,
+    activeDoctors: serverStats?.activeDoctors ?? 0,
+    totalAppointments: serverStats?.totalAppointments ?? 0,
+    completedAppointments: serverStats?.completedAppointments ?? 0,
+  };
 
-    if (doctorsLoading || appointmentsLoading) return <LoadingUI />;
+  if (statsLoading && !serverStats) return <LoadingUI />;
 
-    return (
-        <div className="min-h-screen bg-background">
-            <Navbar />
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
 
-            <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pt-28 pb-20">
         {/* ADMIN WELCOME SECTION */}
-        <div className="mb-12 flex items-center justify-between bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-8 border border-primary/20">
-          <div className="space-y-4">
+        <div className="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gradient-to-br from-primary/15 via-primary/5 to-background rounded-3xl p-6 sm:p-8 border border-primary/20 gap-6">
+          <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-primary">Admin Dashboard</span>
+              <div className="size-2 bg-primary rounded-full animate-pulse" />
+              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                Hospital Practice Management
+              </span>
             </div>
             <div>
-              <h1 className="text-4xl font-bold mb-2">
-                Welcome back, {user?.firstName || "Admin"}!
+              <h1 className="text-3xl sm:text-4xl font-extrabold mb-1 tracking-tight">
+                Welcome back, {user?.firstName || "Hospital Director"}!
               </h1>
-              <p className="text-muted-foreground">
-                Manage doctors, oversee appointments, and monitor your dental practice performance.
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                Oversee clinical operations, manage attending doctor schedules, review patient appointments, and monitor hospital throughput.
               </p>
             </div>
           </div>
 
-          <div className="hidden lg:block">
-            <div className="w-32 h-32 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
-              <SettingsIcon className="w-16 h-16 text-primary" />
-            </div>
+          <div className="hidden lg:flex items-center justify-center size-28 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl border border-primary/20 shrink-0">
+            <SettingsIcon className="size-12 text-primary" />
           </div>
         </div>
 
@@ -60,11 +58,10 @@ function AdminDashboardClient() {
         />
 
         <DoctorsManagement />
-
-
-        </div>
-        </div>
-    )
+        <RecentAppointments />
+      </div>
+    </div>
+  );
 }
 
 export default AdminDashboardClient;
@@ -86,7 +83,6 @@ function LoadingUI() {
       <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
         <div className="flex items-center justify-center h-[70vh]">
           <div className="text-center space-y-6">
-            
             {/* SPINNER */}
             <div className="relative w-20 h-20 mx-auto">
               <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
@@ -100,15 +96,8 @@ function LoadingUI() {
                 Loading Admin Dashboard
               </h2>
               <p className="text-muted-foreground text-sm">
-                Fetching doctors, appointments & stats…
+                Fetching clinical operations and practice statistics...
               </p>
-            </div>
-
-            {/* PROGRESS DOTS */}
-            <div className="flex justify-center gap-2 pt-2">
-              <span className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
-              <span className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]" />
-              <span className="w-2 h-2 bg-primary rounded-full animate-bounce" />
             </div>
           </div>
         </div>

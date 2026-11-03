@@ -1,18 +1,20 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import AdminDashboardClient from "./AdminDashboardClient";
+import { isAdminEmail } from "@/lib/auth";
 
 async function AdminPage() {
   const user = await currentUser();
 
-  // user is not logged in
+  // User is not logged in
   if (!user) redirect("/");
 
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const userEmail = user.emailAddresses[0]?.emailAddress;
+  // Check if any of user's emails match the configured admin email
+  const hasAdminAccess = user.emailAddresses.some((e) => isAdminEmail(e.emailAddress));
 
-  // user is not the admin
-  if (!adminEmail || userEmail !== adminEmail) redirect("/dashboard");
+  if (!hasAdminAccess) {
+    redirect("/dashboard");
+  }
 
   return <AdminDashboardClient />;
 }
