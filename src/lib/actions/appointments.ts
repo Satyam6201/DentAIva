@@ -1,23 +1,69 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../prisma";
-import { AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus, Prisma } from "@prisma/client";
+import { getSafeAvatarUrl } from "../utils";
+import { requireAdmin, requireUser } from "../auth";
+import { BookAppointmentSchema, UpdateAppointmentStatusSchema } from "../validations";
 
-function transformAppointment(appointment: any) {
+interface AppointmentWithRelations {
+  id: string;
+  date: Date;
+  time: string;
+  duration: number;
+  status: AppointmentStatus;
+  notes: string | null;
+  reason: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  doctorId: string;
+  user: {
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+  };
+  doctor: {
+    name: string;
+    imageUrl: string;
+  };
+}
+
+function transformAppointment(appointment: AppointmentWithRelations) {
   return {
     ...appointment,
-    patientName: `${appointment.user.firstName || ""} ${appointment.user.lastName || ""}`.trim(),
+    patientName: `${appointment.user.firstName || ""} ${appointment.user.lastName || ""}`.trim() || "Anonymous Patient",
     patientEmail: appointment.user.email,
     doctorName: appointment.doctor.name,
-    doctorImageUrl: appointment.doctor.imageUrl || "",
+    doctorImageUrl: getSafeAvatarUrl(appointment.doctor.imageUrl, appointment.doctor.name),
     date: appointment.date.toISOString().split("T")[0],
   };
 }
 
-export async function getAppointments() {
+/**
+ * Normalizes any date string into a consistent UTC midnight timestamp.
+ * Prevents timezone mismatches between client, server, and database.
+ */
+function normalizeDateToUtcMidnight(dateStr: string): Date {
+  const cleanDate = dateStr.split("T")[0];
+  return new Date(`${cleanDate}T00:00:00.000Z`);
+}
+
+/**
+ * Fetch hospital appointments for practice administrators.
+ * Protected: Requires Administrator privileges.
+ * Scalable: Paginated to prevent memory exhaustion with large datasets.
+ */
+export async function getAppointments(limit: number = 100, offset: number = 0) {
   try {
+    await requireAdmin();
+
+    const safeLimit = Math.min(Math.max(1, limit), 200);
+    const safeOffset = Math.max(0, offset);
+
     const appointments = await prisma.appointment.findMany({
+      take: safeLimit,
+      skip: safeOffset,
       include: {
         user: {
           select: {
@@ -31,23 +77,51 @@ export async function getAppointments() {
       orderBy: { createdAt: "desc" },
     });
 
-    // return appointments.map(transformAppointment);
-    return appointments;
-  } catch (error) {
-    console.log("Error fetching appointments:", error);
-    throw new Error("Failed to fetch appointments");
+    return appointments.map(transformAppointment);
+  } catch (error: any) {
+    console.error("Error fetching appointments:", error);
+    throw new Error(error.message || "Failed to fetch appointments");
   }
 }
 
+/**
+ * High-performance aggregate statistics for the administrative dashboard.
+ * Executes database-level COUNT queries instead of fetching raw rows into memory.
+ */
+export async function getAdminDashboardStats() {
+  try {
+    await requireAdmin();
+
+    const [totalDoctors, activeDoctors, totalAppointments, completedAppointments] = await Promise.all([
+      prisma.doctor.count(),
+      prisma.doctor.count({ where: { isActive: true } }),
+      prisma.appointment.count(),
+      prisma.appointment.count({ where: { status: "COMPLETED" } }),
+    ]);
+
+    return {
+      totalDoctors,
+      activeDoctors,
+      totalAppointments,
+      completedAppointments,
+    };
+  } catch (error: any) {
+    console.error("Error fetching admin stats:", error);
+    throw new Error(error.message || "Failed to compute practice management statistics");
+  }
+}
+
+/**
+ * Fetch appointments belonging exclusively to the currently authenticated patient.
+ */
 export async function getUserAppointments() {
   try {
-    // get authenticated user from Clerk
-    const { userId } = await auth();
-    if (!userId) throw new Error("You must be logged in to view appointments");
+    const { userId } = await requireUser();
 
-    // find user by clerkId from authenticated session
     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-    if (!user) throw new Error("User not found. Please ensure your account is properly set up.");
+    if (!user) {
+      return [];
+    }
 
     const appointments = await prisma.appointment.findMany({
       where: { userId: user.id },
@@ -59,22 +133,22 @@ export async function getUserAppointments() {
     });
 
     return appointments.map(transformAppointment);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching user appointments:", error);
-    throw new Error("Failed to fetch user appointments");
+    throw new Error(error.message || "Failed to fetch user appointments");
   }
 }
 
+/**
+ * Fetch count stats for the authenticated patient.
+ */
 export async function getUserAppointmentStats() {
   try {
-    const { userId } = await auth();
-    if (!userId) throw new Error("You must be authenticated");
+    const { userId } = await requireUser();
 
     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+    if (!user) return { totalAppointments: 0, completedAppointments: 0 };
 
-    if (!user) throw new Error("User not found");
-
-    // these calls will run in parallel, instead of waiting each other
     const [totalCount, completedCount] = await Promise.all([
       prisma.appointment.count({
         where: { userId: user.id },
@@ -97,83 +171,153 @@ export async function getUserAppointmentStats() {
   }
 }
 
-// export async function getBookedTimeSlots(doctorId: string, date: string) {
-//   try {
-//     const appointments = await prisma.appointment.findMany({
-//       where: {
-//         doctorId,
-//         date: new Date(date),
-//         status: {
-//           in: ["CONFIRMED", "COMPLETED"], // consider both confirmed and completed appointments as blocking
-//         },
-//       },
-//       select: { time: true },
-//     });
+/**
+ * Fetches already booked time slots for a specific doctor and date.
+ * Relies on the @@index([doctorId, date]) index for millisecond performance.
+ */
+export async function getBookedTimeSlots(doctorId: string, date: string) {
+  try {
+    if (!doctorId || !date) return [];
 
-//     return appointments.map((appointment) => appointment.time);
-//   } catch (error) {
-//     console.error("Error fetching booked time slots:", error);
-//     return []; // return empty array if there's an error
-//   }
-// }
+    const normalizedDate = normalizeDateToUtcMidnight(date);
 
-// interface BookAppointmentInput {
-//   doctorId: string;
-//   date: string;
-//   time: string;
-//   reason?: string;
-// }
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        doctorId,
+        date: normalizedDate,
+        status: {
+          in: ["CONFIRMED", "COMPLETED"],
+        },
+      },
+      select: { time: true },
+    });
 
-// export async function bookAppointment(input: BookAppointmentInput) {
-//   try {
-//     const { userId } = await auth();
-//     if (!userId) throw new Error("You must be logged in to book an appointment");
+    return appointments.map((appointment) => appointment.time);
+  } catch (error) {
+    console.error("Error fetching booked time slots:", error);
+    return [];
+  }
+}
 
-//     if (!input.doctorId || !input.date || !input.time) {
-//       throw new Error("Doctor, date, and time are required");
-//     }
+interface BookAppointmentInput {
+  doctorId: string;
+  date: string;
+  time: string;
+  reason?: string;
+}
 
-//     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-//     if (!user) throw new Error("User not found. Please ensure your account is properly set up.");
+/**
+ * Books an appointment with double-booking prevention and concurrency safety.
+ * Validates inputs, verifies doctor availability, checks existing slots,
+ * and handles database unique constraint collisions gracefully.
+ */
+export async function bookAppointment(input: BookAppointmentInput) {
+  try {
+    const { userId, user: clerkUser } = await requireUser();
 
-//     const appointment = await prisma.appointment.create({
-//       data: {
-//         userId: user.id,
-//         doctorId: input.doctorId,
-//         date: new Date(input.date),
-//         time: input.time,
-//         reason: input.reason || "General consultation",
-//         status: "CONFIRMED",
-//       },
-//       include: {
-//         user: {
-//           select: {
-//             firstName: true,
-//             lastName: true,
-//             email: true,
-//           },
-//         },
-//         doctor: { select: { name: true, imageUrl: true } },
-//       },
-//     });
+    // Validate inputs
+    const validated = BookAppointmentSchema.parse(input);
+    const normalizedDate = normalizeDateToUtcMidnight(validated.date);
 
-//     return transformAppointment(appointment);
-//   } catch (error) {
-//     console.error("Error booking appointment:", error);
-//     throw new Error("Failed to book appointment. Please try again later.");
-//   }
-// }
+    // Verify doctor exists and is accepting appointments
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: validated.doctorId },
+      select: { id: true, isActive: true, name: true },
+    });
 
-// export async function updateAppointmentStatus(input: { id: string; status: AppointmentStatus }) {
-//   try {
-//     const appointment = await prisma.appointment.update({
-//       where: { id: input.id },
-//       data: { status: input.status },
-//     });
+    if (!doctor) {
+      throw new Error("The selected doctor could not be found.");
+    }
 
-//     return appointment;
-//   } catch (error) {
-//     console.error("Error updating appointment:", error);
-//     throw new Error("Failed to update appointment");
-//   }
-// }
+    if (!doctor.isActive) {
+      throw new Error("This doctor is currently not accepting new appointments.");
+    }
+
+    // Ensure database user record exists
+    const user = await prisma.user.upsert({
+      where: { clerkId: userId },
+      update: {
+        firstName: clerkUser.firstName,
+        lastName: clerkUser.lastName,
+        email: clerkUser.emailAddresses[0]?.emailAddress || "patient@dentaiva.com",
+        phone: clerkUser.phoneNumbers[0]?.phoneNumber || null,
+      },
+      create: {
+        clerkId: userId,
+        firstName: clerkUser.firstName,
+        lastName: clerkUser.lastName,
+        email: clerkUser.emailAddresses[0]?.emailAddress || "patient@dentaiva.com",
+        phone: clerkUser.phoneNumbers[0]?.phoneNumber || null,
+      },
+    });
+
+    // Check if slot is already occupied before attempting insert
+    const existingSlot = await prisma.appointment.findFirst({
+      where: {
+        doctorId: validated.doctorId,
+        date: normalizedDate,
+        time: validated.time,
+        status: { in: ["CONFIRMED", "COMPLETED"] },
+      },
+    });
+
+    if (existingSlot) {
+      throw new Error("This time slot has already been booked. Please choose an alternate slot.");
+    }
+
+    // Create appointment (Database composite unique constraint protects against concurrent race conditions)
+    const appointment = await prisma.appointment.create({
+      data: {
+        userId: user.id,
+        doctorId: validated.doctorId,
+        date: normalizedDate,
+        time: validated.time,
+        reason: validated.reason || "General consultation",
+        status: "CONFIRMED",
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        doctor: { select: { name: true, imageUrl: true } },
+      },
+    });
+
+    return transformAppointment(appointment);
+  } catch (error: any) {
+    console.error("Error booking appointment:", error);
+
+    // Handle Prisma unique constraint collision (P2002) in case of parallel booking requests
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      throw new Error("This time slot was just booked by another patient. Please choose another time.");
+    }
+
+    throw new Error(error.message || "Failed to book appointment. Please try again.");
+  }
+}
+
+/**
+ * Updates an appointment's status (e.g. CONFIRMED <-> COMPLETED).
+ * Protected: Requires Administrator privileges.
+ */
+export async function updateAppointmentStatus(input: { id: string; status: AppointmentStatus }) {
+  try {
+    await requireAdmin();
+
+    const validated = UpdateAppointmentStatusSchema.parse(input);
+
+    const appointment = await prisma.appointment.update({
+      where: { id: validated.id },
+      data: { status: validated.status },
+    });
+
+    return appointment;
+  } catch (error: any) {
+    console.error("Error updating appointment status:", error);
+    throw new Error(error.message || "Failed to update appointment status");
+  }
+}
