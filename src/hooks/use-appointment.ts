@@ -2,6 +2,7 @@
 
 import {
   bookAppointment,
+  getAdminDashboardStats,
   getAppointments,
   getBookedTimeSlots,
   getUserAppointments,
@@ -9,20 +10,26 @@ import {
 } from "@/lib/actions/appointments";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function useGetAppointments() {
-  const result = useQuery({
-    queryKey: ["getAppointments"],
-    queryFn: getAppointments,
+export function useGetAppointments(limit: number = 100, offset: number = 0) {
+  return useQuery({
+    queryKey: ["getAppointments", limit, offset],
+    queryFn: () => getAppointments(limit, offset),
   });
+}
 
-  return result;
+export function useAdminDashboardStats() {
+  return useQuery({
+    queryKey: ["getAdminDashboardStats"],
+    queryFn: getAdminDashboardStats,
+    refetchInterval: 30000, // Background poll every 30s for live clinic updates
+  });
 }
 
 export function useBookedTimeSlots(doctorId: string, date: string) {
   return useQuery({
-    queryKey: ["getBookedTimeSlots"],
-    queryFn: () => getBookedTimeSlots(doctorId!, date),
-    enabled: !!doctorId && !!date, // only run query if both doctorId and date are provided
+    queryKey: ["getBookedTimeSlots", doctorId, date],
+    queryFn: () => getBookedTimeSlots(doctorId, date),
+    enabled: Boolean(doctorId && date),
   });
 }
 
@@ -31,8 +38,13 @@ export function useBookAppointment() {
 
   return useMutation({
     mutationFn: bookAppointment,
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["getUserAppointments"] });
+      queryClient.invalidateQueries({
+        queryKey: ["getBookedTimeSlots", variables.doctorId, variables.date],
+      });
+      queryClient.invalidateQueries({ queryKey: ["getAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["getAdminDashboardStats"] });
     },
     onError: (error) => console.error("Failed to book appointment:", error),
   });
@@ -40,12 +52,10 @@ export function useBookAppointment() {
 
 // Get user-specific appointments
 export function useUserAppointments() {
-  const result = useQuery({
+  return useQuery({
     queryKey: ["getUserAppointments"],
     queryFn: getUserAppointments,
   });
-
-  return result;
 }
 
 export function useUpdateAppointmentStatus() {
@@ -55,6 +65,7 @@ export function useUpdateAppointmentStatus() {
     mutationFn: updateAppointmentStatus,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getAppointments"] });
+      queryClient.invalidateQueries({ queryKey: ["getAdminDashboardStats"] });
     },
     onError: (error) => console.error("Failed to update appointment:", error),
   });
