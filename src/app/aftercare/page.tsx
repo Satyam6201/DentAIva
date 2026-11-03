@@ -12,10 +12,12 @@ import {
   ClockIcon,
   PhoneCallIcon,
   ShieldAlertIcon,
-  InfoIcon,
-  HelpCircleIcon,
   ArrowRightIcon,
-  FlameIcon,
+  StethoscopeIcon,
+  MicroscopeIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
+  MicIcon,
 } from "lucide-react";
 import Link from "next/link";
 import EmergencyTriageModal from "@/components/emergency/EmergencyTriageModal";
@@ -25,7 +27,7 @@ interface AftercareGuide {
   title: string;
   category: string;
   badgeColor: string;
-  icon: string;
+  icon: React.ElementType;
   summary: string;
   doList: string[];
   dontList: string[];
@@ -42,7 +44,7 @@ const AFTERCARE_GUIDES: AftercareGuide[] = [
     title: "Tooth Extraction & Wisdom Teeth Surgery",
     category: "Oral Surgery",
     badgeColor: "bg-red-500/10 text-red-400 border-red-500/20",
-    icon: "🦷",
+    icon: StethoscopeIcon,
     summary:
       "Crucial guidelines to facilitate blood clot formation and prevent painful Dry Socket (Alveolar Osteitis).",
     doList: [
@@ -85,7 +87,7 @@ const AFTERCARE_GUIDES: AftercareGuide[] = [
     title: "Root Canal Therapy (Endodontics)",
     category: "Endodontics",
     badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    icon: "🔬",
+    icon: MicroscopeIcon,
     summary:
       "Care instructions following pulp cleaning to protect the temporary filling and soothe periodontal ligament soreness.",
     doList: [
@@ -125,7 +127,7 @@ const AFTERCARE_GUIDES: AftercareGuide[] = [
     title: "Dental Implant & Bone Graft Recovery",
     category: "Implantology",
     badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    icon: "💎",
+    icon: ShieldCheckIcon,
     summary:
       "Ensuring successful osseointegration (bone fusion) and gum cuff healing around the titanium fixture.",
     doList: [
@@ -166,7 +168,7 @@ const AFTERCARE_GUIDES: AftercareGuide[] = [
     title: "Philips Zoom! Laser Teeth Whitening",
     category: "Cosmetic",
     badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    icon: "✨",
+    icon: SparklesIcon,
     summary:
       "Strict 48-hour 'White Diet' rules to prevent staining porous enamel and strategies for temporary sensitivity.",
     doList: [
@@ -206,8 +208,6 @@ const AFTERCARE_GUIDES: AftercareGuide[] = [
 export default function AftercarePage() {
   const [selectedGuideId, setSelectedGuideId] = useState<string>("extraction");
   const [isTriageOpen, setIsTriageOpen] = useState(false);
-
-  // Interactive recovery checklist states
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 
   const toggleCheck = (key: string) => {
@@ -220,6 +220,7 @@ export default function AftercarePage() {
   const currentGuide =
     AFTERCARE_GUIDES.find((g) => g.id === selectedGuideId) ||
     AFTERCARE_GUIDES[0];
+  const CurrentGuideIcon = currentGuide.icon;
 
   return (
     <>
@@ -227,7 +228,6 @@ export default function AftercarePage() {
 
       <main className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-10">
-          {/* HEADER SECTION */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-background border border-primary/20 p-8 sm:p-10">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
               <div className="space-y-4 max-w-3xl">
@@ -245,7 +245,6 @@ export default function AftercarePage() {
                 </p>
               </div>
 
-              {/* EMERGENCY CALLOUT */}
               <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                 <Button
                   onClick={() => setIsTriageOpen(true)}
@@ -258,7 +257,6 @@ export default function AftercarePage() {
             </div>
           </div>
 
-          {/* WARNING RED FLAGS CARD */}
           <Card className="border-2 border-red-500/40 bg-gradient-to-r from-red-500/10 via-card to-card p-6 shadow-md">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
@@ -289,33 +287,35 @@ export default function AftercarePage() {
             </div>
           </Card>
 
-          {/* PROCEDURE SELECTOR BUTTONS */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-border/60">
-            {AFTERCARE_GUIDES.map((guide) => (
-              <button
-                key={guide.id}
-                type="button"
-                onClick={() => setSelectedGuideId(guide.id)}
-                className={`py-2.5 px-4 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
-                  selectedGuideId === guide.id
-                    ? "bg-primary text-white shadow-md"
-                    : "bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span>{guide.icon}</span>
-                <span>{guide.title}</span>
-              </button>
-            ))}
+            {AFTERCARE_GUIDES.map((guide) => {
+              const GuideIcon = guide.icon;
+              return (
+                <button
+                  key={guide.id}
+                  type="button"
+                  onClick={() => setSelectedGuideId(guide.id)}
+                  className={`py-2.5 px-4 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
+                    selectedGuideId === guide.id
+                      ? "bg-primary text-white shadow-md"
+                      : "bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <GuideIcon className="size-3.5" />
+                  <span>{guide.title}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* ACTIVE GUIDE CONTENT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* LEFT 2 COLS: DO & DON'T LISTS */}
             <div className="lg:col-span-2 space-y-6">
               <div className="p-6 rounded-3xl bg-card border border-border/80 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl">{currentGuide.icon}</span>
+                    <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 text-primary shrink-0">
+                      <CurrentGuideIcon className="size-6" />
+                    </div>
                     <div>
                       <h2 className="text-2xl font-bold text-foreground">
                         {currentGuide.title}
@@ -331,9 +331,7 @@ export default function AftercarePage() {
                   {currentGuide.summary}
                 </p>
 
-                {/* DO & DON'T SPLIT */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                  {/* WHAT TO DO */}
                   <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/20 space-y-3">
                     <div className="flex items-center gap-2 text-green-400 font-bold text-xs uppercase tracking-wide">
                       <CheckCircle2Icon className="size-4" />
@@ -349,7 +347,6 @@ export default function AftercarePage() {
                     </ul>
                   </div>
 
-                  {/* WHAT TO AVOID */}
                   <div className="p-4 rounded-2xl bg-red-500/5 border border-red-500/20 space-y-3">
                     <div className="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wide">
                       <AlertTriangleIcon className="size-4" />
@@ -367,7 +364,6 @@ export default function AftercarePage() {
                 </div>
               </div>
 
-              {/* RECOVERY MILESTONE TIMELINE */}
               <div className="p-6 rounded-3xl bg-card border border-border/80 shadow-sm space-y-4">
                 <h3 className="text-lg font-bold flex items-center gap-2">
                   <ClockIcon className="size-5 text-primary" />
@@ -397,9 +393,7 @@ export default function AftercarePage() {
               </div>
             </div>
 
-            {/* RIGHT COL: INTERACTIVE RECOVERY CHECKLIST & SUPPORT */}
             <div className="space-y-6">
-              {/* CHECKLIST */}
               <Card className="border border-border/80 bg-card/90 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
@@ -445,11 +439,10 @@ export default function AftercarePage() {
                 </CardContent>
               </Card>
 
-              {/* AI RECOVERY COMPANION CARD */}
               <Card className="border border-primary/20 bg-gradient-to-br from-primary/10 to-card p-5 shadow-sm space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-2xl bg-primary/20 flex items-center justify-center text-xl">
-                    🎙️
+                  <div className="size-10 rounded-2xl bg-primary/20 flex items-center justify-center text-primary">
+                    <MicIcon className="size-5" />
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-foreground">

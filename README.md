@@ -1,6 +1,6 @@
 <img width="1280" height="720" alt="screenshot-for-readme" src="https://github.com/user-attachments/assets/eabb064d-fb59-4d66-9a9d-29a90774a1c7" />
 
-# 🦷 DentAIva — AI-Powered Dental Hospital & Clinic SaaS
+# DentAIva — AI-Powered Dental Hospital & Clinic SaaS
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.1.4-blue?style=for-the-badge&logo=react)](https://react.dev/)
@@ -16,54 +16,54 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [✨ Highlights](#-highlights)
-- [📊 System Architecture & How It Works](#-system-architecture--how-it-works)
+- [Highlights](#highlights)
+- [System Architecture & How It Works](#system-architecture--how-it-works)
   - [1. High-Level System Architecture](#1-high-level-system-architecture)
   - [2. End-to-End Patient Journey Workflow](#2-end-to-end-patient-journey-workflow)
   - [3. 3-Step Smart Booking & Email Dispatch Sequence](#3-3-step-smart-booking--email-dispatch-sequence)
   - [4. AI Voice Dental Consultation Architecture](#4-ai-voice-dental-consultation-architecture)
   - [5. Database Entity Relationship Diagram (ERD)](#5-database-entity-relationship-diagram-erd)
-- [🚀 Core Features & Modules](#-core-features--modules)
-  - [🚨 24/7 Dental Trauma & Emergency Triage](#-247-dental-trauma--emergency-triage)
-  - [🩺 Specialized Hospital Departments (`/services`)](#-specialized-hospital-departments-services)
-  - [📋 Patient Health Vault & EHR (`/records`)](#-patient-health-vault--ehr-records)
-  - [🩹 Post-Operative Aftercare Hub (`/aftercare`)](#-post-operative-aftercare-hub-aftercare)
-  - [📅 3-Step Smart Booking Engine (`/appointments`)](#-3-step-smart-booking-engine-appointments)
-  - [🎙️ AI Voice Dental Assistant (`/voice`)](#-ai-voice-dental-assistant-voice)
-  - [🛡️ Practice Management Portal (`/admin`)](#-practice-management-portal-admin)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📁 Project Structure](#-project-structure)
-- [⚙️ Getting Started & Installation](#️-getting-started--installation)
+- [Core Features & Modules](#core-features--modules)
+  - [24/7 Dental Trauma & Emergency Triage](#247-dental-trauma--emergency-triage)
+  - [Specialized Hospital Departments (`/services`)](#specialized-hospital-departments-services)
+  - [Patient Health Vault & EHR (`/records`)](#patient-health-vault--ehr-records)
+  - [Post-Operative Aftercare Hub (`/aftercare`)](#post-operative-aftercare-hub-aftercare)
+  - [3-Step Smart Booking Engine (`/appointments`)](#3-step-smart-booking-engine-appointments)
+  - [AI Voice Dental Assistant (`/voice`)](#ai-voice-dental-assistant-voice)
+  - [Practice Management Portal (`/admin`)](#practice-management-portal-admin)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started & Installation](#getting-started--installation)
   - [Prerequisites](#prerequisites)
   - [1. Clone Repository & Install Dependencies](#1-clone-repository--install-dependencies)
   - [2. Environment Variables Configuration](#2-environment-variables-configuration)
   - [3. Database Migration & Prisma Generation](#3-database-migration--prisma-generation)
   - [4. Run Local Development Server](#4-run-local-development-server)
-- [📜 Available Scripts](#-available-scripts)
-- [📄 License](#-license)
+- [Available Scripts](#available-scripts)
+- [License](#license)
 
 ---
 
-## ✨ Highlights
+## Highlights
 
-- 🏥 **Hospital-Grade Patient Portal**: Modern medical UI featuring glassmorphism, responsive navigation, clinic accreditation badges, and interactive triage.
-- 🚨 **24/7 Emergency Triage & Trauma Desk**: Level 1–3 severity classifier with clinical first-aid protocols and direct hotline dialing (`+1 800-433-6824`).
-- 🩺 **Specialized Departments Catalog (`/services`)**: 8 clinical divisions (Oral Surgery, Orthodontics, Endodontics, Implants, Periodontics, Pediatric, Cosmetic, and Emergency Trauma) with procedure checklists, preparation guidelines, and transparent fee schedules.
-- 📋 **Patient Health Vault & EHR (`/records`)**: Digital Patient ID card, drug allergy registry (penicillin, latex, epinephrine, NSAIDs), active medication regimens, and chronological treatment history pulled from PostgreSQL.
-- 🖨️ **Printable Official Clinic Pass**: Hospital-grade printable pass with appointment slip, barcode, QR verification placeholder, attending doctor signature line, and pre-visit clinical checklist.
-- 🩹 **Post-Operative Aftercare Hub (`/aftercare`)**: Procedure-specific recovery guides (extractions, root canals, implants, whitening), day-by-day milestone timelines, and interactive healing checklists.
-- 🗣️ **AI Voice Dental Assistant (`/voice`)**: Real-time voice consultation powered by **Vapi AI** (*Riley* persona) with audio waveforms and live conversational transcripts.
-- 📅 **3-Step Smart Booking Flow (`/appointments`)**: Doctor search, specialty filter chips, dynamic 5-day slot selection, and real-time double-booking prevention backed by PostgreSQL.
-- 👨‍⚕️ **Deterministic Clinical Avatar System**: Professional high-resolution doctor photography dynamically assigned and verified (`getSafeAvatarUrl()`) ensuring zero broken avatar links.
-- 📩 **Automated Confirmation Emails**: Responsive HTML email templates dispatched via **React Email + Resend**.
-- 📊 **Practice Management Portal (`/admin`)**: Role-protected dashboard with practice metrics, doctor CRUD operations, and one-click appointment status toggles (`CONFIRMED` ↔ `COMPLETED`).
-- 🔐 **Authentication & Subscriptions**: Multi-method login via **Clerk** with subscription tier gating (`ai_basic` & `ai_pro`) and `<PricingTable />`.
+- **Hospital-Grade Patient Portal**: Modern medical UI featuring glassmorphism, responsive navigation, clinic accreditation badges, and interactive triage.
+- **24/7 Emergency Triage & Trauma Desk**: Level 1–3 severity classifier with clinical first-aid protocols and direct hotline dialing (`+1 800-433-6824`).
+- **Specialized Departments Catalog (`/services`)**: 8 clinical divisions (Oral Surgery, Orthodontics, Endodontics, Implants, Periodontics, Pediatric, Cosmetic, and Emergency Trauma) with procedure checklists, preparation guidelines, and transparent fee schedules.
+- **Patient Health Vault & EHR (`/records`)**: Digital Patient ID card, drug allergy registry (penicillin, latex, epinephrine, NSAIDs), active medication regimens, and chronological treatment history pulled from PostgreSQL.
+- **Printable Official Clinic Pass**: Hospital-grade printable pass with appointment slip, barcode, QR verification placeholder, attending doctor signature line, and pre-visit clinical checklist.
+- **Post-Operative Aftercare Hub (`/aftercare`)**: Procedure-specific recovery guides (extractions, root canals, implants, whitening), day-by-day milestone timelines, and interactive healing checklists.
+- **AI Voice Dental Assistant (`/voice`)**: Real-time voice consultation powered by **Vapi AI** (*Riley* persona) with audio waveforms and live conversational transcripts.
+- **3-Step Smart Booking Flow (`/appointments`)**: Doctor search, specialty filter chips, dynamic 5-day slot selection, and real-time double-booking prevention backed by PostgreSQL.
+- **Deterministic Clinical Avatar System**: Professional high-resolution doctor photography dynamically assigned and verified (`getSafeAvatarUrl()`) ensuring zero broken avatar links.
+- **Automated Confirmation Emails**: Responsive HTML email templates dispatched via **React Email + Resend**.
+- **Practice Management Portal (`/admin`)**: Role-protected dashboard with practice metrics, doctor CRUD operations, and one-click appointment status toggles (`CONFIRMED` ↔ `COMPLETED`).
+- **Authentication & Subscriptions**: Multi-method login via **Clerk** with subscription tier gating (`ai_basic` & `ai_pro`) and `<PricingTable />`.
 
 ---
 
-## 📊 System Architecture & How It Works
+## System Architecture & How It Works
 
 ### 1. High-Level System Architecture
 
@@ -71,29 +71,29 @@ The following diagram illustrates how clients, frontend layers, Next.js Server A
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer["🖥️ Client Layer (Browser)"]
+    subgraph ClientLayer["Client Layer (Browser)"]
         UserBrowser["Patient Portal & Dashboard\n(Next.js App Router)"]
         AdminBrowser["Practice Admin Dashboard\n(Role Protected)"]
         VoiceClient["Vapi Web Audio SDK\n(Microphone & Speakers)"]
     end
 
-    subgraph SecurityMiddleware["🔐 Security & Auth Layer"]
+    subgraph SecurityMiddleware["Security & Auth Layer"]
         ClerkAuth["Clerk Authentication\nMiddleware & JWT Sessions"]
         RoleCheck["Admin Email Verification\n(ADMIN_EMAIL)"]
     end
 
-    subgraph AppServer["⚡ DentAIva Application Server (Next.js 15)"]
+    subgraph AppServer["DentAIva Application Server (Next.js 15)"]
         AppRouter["App Router Pages\n(/, /dashboard, /appointments, /records, /aftercare, /services, /admin, /voice)"]
         ServerActions["Server Actions\n(appointments.ts, doctors.ts, users.ts)"]
         EmailRoute["API Route\n(/api/send-appointment-email)"]
     end
 
-    subgraph DatabaseLayer["🗄️ Database & Storage Layer"]
+    subgraph DatabaseLayer["Database & Storage Layer"]
         PrismaORM["Prisma ORM 6 Client"]
         NeonDB[("Neon Serverless\nPostgreSQL Database")]
     end
 
-    subgraph ExternalServices["🌐 External Cloud Services"]
+    subgraph ExternalServices["External Cloud Services"]
         VapiCloud["Vapi AI Voice Cloud\n(Riley Dental Persona)"]
         ResendMail["Resend Email Service\n(React Email Templates)"]
     end
@@ -159,12 +159,12 @@ The sequence diagram below displays the real-time interaction between the patien
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Patient as 👤 Patient
-    participant UI as 💻 Booking UI (/appointments)
-    participant Action as ⚙️ Server Action (appointments.ts)
-    participant DB as 🗄️ PostgreSQL (Neon / Prisma)
-    participant API as 📬 Email API (/api/send-appointment-email)
-    participant Resend as ✉️ Resend Service
+    actor Patient as Patient
+    participant UI as Booking UI (/appointments)
+    participant Action as Server Action (appointments.ts)
+    participant DB as PostgreSQL (Neon / Prisma)
+    participant API as Email API (/api/send-appointment-email)
+    participant Resend as Resend Service
 
     Patient->>UI: 1. Select Doctor & Specialty
     UI->>Action: getBookedTimeSlots(doctorId, date)
@@ -193,19 +193,19 @@ DentAIva integrates **Vapi Web SDK** with a custom dental assistant configuratio
 
 ```mermaid
 flowchart TD
-    subgraph BrowserEnvironment["🌐 Client Browser"]
-        UserMic["🎤 Patient Audio Input (Microphone)"]
-        UserSpeaker["🔊 Assistant Audio Output (Speakers)"]
-        Waveform["🌊 Real-Time Audio Visualizer"]
-        TranscriptBox["📝 Live Conversational Transcript"]
+    subgraph BrowserEnvironment["Client Browser"]
+        UserMic["Patient Audio Input (Microphone)"]
+        UserSpeaker["Assistant Audio Output (Speakers)"]
+        Waveform["Real-Time Audio Visualizer"]
+        TranscriptBox["Live Conversational Transcript"]
     end
 
-    subgraph ClientController["📦 DentAIva Voice Module (/voice)"]
+    subgraph ClientController["DentAIva Voice Module (/voice)"]
         PlanGuard["Clerk Subscription Gate\n(ai_basic or ai_pro)"]
         VapiSDK["Vapi Web SDK Client\n(@vapi-ai/web)"]
     end
 
-    subgraph VapiServer["☁️ Vapi AI Cloud Platform"]
+    subgraph VapiServer["Vapi AI Cloud Platform"]
         STT["Real-Time Speech-to-Text (Deepgram)"]
         LLM["Clinical Dental Brain (Riley Prompt)\n(LLM Analysis & Triage)"]
         TTS["Ultra-low Latency Text-to-Speech (Cartesia/11Labs)"]
@@ -275,9 +275,9 @@ erDiagram
 
 ---
 
-## 🚀 Core Features & Modules
+## Core Features & Modules
 
-### 🚨 24/7 Dental Trauma & Emergency Triage
+### 24/7 Dental Trauma & Emergency Triage
 - **Clinical Severity Classification**:
   - **Level 1 (Critical)**: Avulsed (knocked-out) permanent tooth, severe uncontrolled hemorrhage, expanding facial swelling with airway compromise.
   - **Level 2 (Urgent)**: Acute irreversible pulpitis, periapical abscess, tooth fracture exposing dental pulp.
@@ -285,7 +285,7 @@ erDiagram
 - **Actionable First-Aid Guides**: Instructions on transporting knocked-out teeth in cold milk or Hank's Balanced Salt Solution (HBSS), cold compression timing, and avoiding aspirin on open bleeding.
 - **Emergency Hotline Quick-Dial**: One-tap dialing to the trauma response desk (`+1 800-433-6824`) with instant appointment booking shortcuts.
 
-### 🩺 Specialized Hospital Departments (`/services`)
+### Specialized Hospital Departments (`/services`)
 - **8 Clinical Divisions**:
   1. **Oral & Maxillofacial Surgery** (Complex extractions, wisdom teeth, jaw realignment)
   2. **Orthodontics & Dentofacial Orthopedics** (Clear aligners, self-ligating brackets)
@@ -297,29 +297,29 @@ erDiagram
   8. **Trauma & 24/7 Emergency Care** (Immediate trauma stabilization)
 - **Pre-Procedure Preparation**: Fasting windows, escort requirements for IV sedation, and blood-thinner hold advisories.
 
-### 📋 Patient Medical Records & Health Vault (`/records`)
+### Patient Medical Records & Health Vault (`/records`)
 - **Digital Patient ID Card**: Displays official medical identification number, blood type, and emergency contacts.
 - **Drug Allergy Warnings**: High-visibility clinical alert badges for penicillin, latex, epinephrine, and NSAID hypersensitivities.
 - **Active Prescription Regimens**: Comprehensive tracker displaying dosage instructions, attending doctor signature, and remaining days.
 - **Printable Official Clinic Pass**: Hospital-grade printable pass with barcode, QR code verification block, and doctor signature block for check-in verification.
 
-### 🩹 Post-Operative Aftercare Hub (`/aftercare`)
+### Post-Operative Aftercare Hub (`/aftercare`)
 - **Procedure-Specific Recovery Protocols**: Tailored instructions for extractions, surgical wisdom tooth removal, endodontic therapy, implants, and laser treatments.
 - **Interactive Healing Checklist**: Check off post-op milestones (sterile gauze compression, ice pack 20-min cycles, salt water rinses, medication adherence).
 - **Hospital Red Flag Warnings**: Clear clinical warnings on when to return immediately (fever > 101°F, persistent bleeding after 4 hours, difficulty swallowing).
 
-### 📅 3-Step Smart Booking Engine (`/appointments`)
+### 3-Step Smart Booking Engine (`/appointments`)
 - **Step 1 - Select Doctor**: Filter clinic practitioners by department, read credentials, and view verified portraits.
 - **Step 2 - Choose Slot**: Dynamic slot picker showing open 30-minute intervals across the upcoming 5 days, automatically disabling reserved slots.
 - **Step 3 - Confirmation & Reason**: Provide reason for visit, review appointment summary, and confirm.
 - **Automated Email Notifications**: Automatically dispatches a formatted HTML confirmation email via **Resend** with visit details and clinic instructions.
 
-### 🎙️ AI Voice Dental Assistant (`/voice`)
+### AI Voice Dental Assistant (`/voice`)
 - **Riley persona**: Configured with dental clinical knowledge to provide preliminary advice, preparation steps, and pricing guidance.
 - **Subscription-Gated**: Requires an active `ai_basic` or `ai_pro` plan, enforced via Clerk server-side session checks.
 - **Interactive UI**: Real-time waveform audio visualizer and live conversational transcript box.
 
-### 🛡️ Practice Management Portal (`/admin`)
+### Practice Management Portal (`/admin`)
 - **Role-Based Access**: Restricted to administrative email (`ADMIN_EMAIL`), automatically redirecting unauthorized users.
 - **Practice Analytics**: Real-time counters for active doctors, total appointments, completed visits, and overall completion rate.
 - **Doctor CRUD**: Onboard new doctors with automatic deterministic avatars, edit doctor profiles, and toggle active/inactive status.
@@ -327,7 +327,7 @@ erDiagram
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Domain | Technology | Purpose |
 |---|---|---|
@@ -347,7 +347,7 @@ erDiagram
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 dentaiva/
@@ -406,7 +406,7 @@ dentaiva/
 
 ---
 
-## ⚙️ Getting Started & Installation
+## Getting Started & Installation
 
 ### Prerequisites
 
@@ -516,7 +516,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ---
 
-## 📜 Available Scripts
+## Available Scripts
 
 | Command | Description |
 |---|---|
@@ -528,6 +528,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).

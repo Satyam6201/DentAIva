@@ -45,7 +45,7 @@ function AppointmentConfirmationEmail({
             <Text style={logoText}>DentAiva</Text>
           </Section>
 
-          <Heading style={h1}>Appointment Confirmed! 🦷</Heading>
+          <Heading style={h1}>Appointment Confirmed</Heading>
 
           <Text style={text}>Hi there,</Text>
 
@@ -104,7 +104,6 @@ function AppointmentConfirmationEmail({
 
 export default AppointmentConfirmationEmail;
 
-// 🤡🤡🤡🤡🤡 styles that were generated using AI 🤡🤡🤡🤡🤡
 const main = {
   backgroundColor: "#ffffff",
   fontFamily:

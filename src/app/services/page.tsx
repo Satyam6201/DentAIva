@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,12 @@ import {
   CalendarIcon,
   SparklesIcon,
   AlertTriangleIcon,
-  PhoneCallIcon,
   HeartPulseIcon,
   UserCheckIcon,
   ArrowRightIcon,
+  SmileIcon,
+  MicroscopeIcon,
+  ActivityIcon,
 } from "lucide-react";
 import Link from "next/link";
 import EmergencyTriageModal from "@/components/emergency/EmergencyTriageModal";
@@ -27,7 +29,7 @@ interface Department {
   id: string;
   name: string;
   shortName: string;
-  icon: string;
+  icon: React.ElementType;
   leadSpecialist: string;
   qualification: string;
   description: string;
@@ -48,7 +50,7 @@ const DEPARTMENTS: Department[] = [
     id: "oral-surgery",
     name: "Oral & Maxillofacial Surgery",
     shortName: "Oral Surgery",
-    icon: "🏥",
+    icon: StethoscopeIcon,
     leadSpecialist: "Dr. Marcus Vance",
     qualification: "DDS, FACS, Board Certified Oral Surgeon (15+ yrs exp)",
     description:
@@ -88,7 +90,7 @@ const DEPARTMENTS: Department[] = [
     id: "orthodontics",
     name: "Orthodontics & Dentofacial Orthopedics",
     shortName: "Orthodontics",
-    icon: "😁",
+    icon: SmileIcon,
     leadSpecialist: "Dr. Elena Rostova",
     qualification: "DMD, MS Orthodontics, Harvard Dental Alumni",
     description:
@@ -127,7 +129,7 @@ const DEPARTMENTS: Department[] = [
     id: "endodontics",
     name: "Endodontics & Root Canal Therapy",
     shortName: "Endodontics",
-    icon: "🔬",
+    icon: MicroscopeIcon,
     leadSpecialist: "Dr. Alexander Thorne",
     qualification: "DDS, Endodontic Specialist, AAE Member",
     description:
@@ -166,7 +168,7 @@ const DEPARTMENTS: Department[] = [
     id: "implantology",
     name: "Prosthodontics & Dental Implants",
     shortName: "Implants & Crowns",
-    icon: "💎",
+    icon: ShieldCheckIcon,
     leadSpecialist: "Dr. Jonathan Hayes",
     qualification: "FACP, Board Certified Prosthodontist",
     description:
@@ -205,7 +207,7 @@ const DEPARTMENTS: Department[] = [
     id: "periodontics",
     name: "Periodontics & Gum Disease Care",
     shortName: "Periodontics",
-    icon: "🌿",
+    icon: ActivityIcon,
     leadSpecialist: "Dr. Rachel Kim",
     qualification: "DDS, Board Certified Periodontist, AAP Member",
     description:
@@ -244,7 +246,7 @@ const DEPARTMENTS: Department[] = [
     id: "pediatric",
     name: "Pediatric Dentistry (Kids Care)",
     shortName: "Pediatric",
-    icon: "🧸",
+    icon: HeartPulseIcon,
     leadSpecialist: "Dr. Maya Patel",
     qualification: "BDS, MSD Pediatric Dental Specialist",
     description:
@@ -283,7 +285,7 @@ const DEPARTMENTS: Department[] = [
     id: "cosmetic",
     name: "Cosmetic & Aesthetic Dentistry",
     shortName: "Cosmetic",
-    icon: "✨",
+    icon: SparklesIcon,
     leadSpecialist: "Dr. Julian Sterling",
     qualification: "DDS, AACD Accredited Cosmetic Dentist",
     description:
@@ -322,7 +324,7 @@ const DEPARTMENTS: Department[] = [
     id: "emergency-dept",
     name: "24/7 Dental Trauma & Emergency Care",
     shortName: "Emergency Trauma",
-    icon: "🚨",
+    icon: AlertTriangleIcon,
     leadSpecialist: "Dr. Liam O'Connor",
     qualification: "DDS, Emergency Dental & Trauma Specialist",
     description:
@@ -382,7 +384,6 @@ export default function ServicesPage() {
 
       <main className="min-h-screen bg-background pt-28 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-10">
-          {/* HEADER SECTION */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/15 via-primary/5 to-background border border-primary/20 p-8 sm:p-10">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
               <div className="space-y-4 max-w-3xl">
@@ -415,7 +416,6 @@ export default function ServicesPage() {
                 </div>
               </div>
 
-              {/* EMERGENCY CALLOUT CARD */}
               <div className="w-full lg:w-72 bg-card/90 border border-red-500/30 rounded-2xl p-5 shadow-lg space-y-3 shrink-0">
                 <div className="flex items-center gap-2 text-red-500 font-semibold text-xs uppercase">
                   <AlertTriangleIcon className="size-4" />
@@ -441,7 +441,6 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* SEARCH & FILTER CONTROLS */}
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
               <div className="relative w-full sm:w-96">
@@ -466,139 +465,143 @@ export default function ServicesPage() {
                 >
                   All Specializations ({DEPARTMENTS.length})
                 </button>
-                {DEPARTMENTS.map((dept) => (
-                  <button
-                    key={dept.id}
-                    type="button"
-                    onClick={() => setSelectedDeptId(dept.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                      selectedDeptId === dept.id
-                        ? "bg-primary text-white shadow-sm"
-                        : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {dept.icon} {dept.shortName}
-                  </button>
-                ))}
+                {DEPARTMENTS.map((dept) => {
+                  const DeptIcon = dept.icon;
+                  return (
+                    <button
+                      key={dept.id}
+                      type="button"
+                      onClick={() => setSelectedDeptId(dept.id)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                        selectedDeptId === dept.id
+                          ? "bg-primary text-white shadow-sm"
+                          : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <DeptIcon className="size-3.5" />
+                      <span>{dept.shortName}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          {/* DEPARTMENTS GRID */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {filteredDepartments.map((dept) => (
-              <Card
-                key={dept.id}
-                className="border border-border/80 bg-card/80 backdrop-blur-sm hover:border-primary/40 transition-all duration-300 shadow-sm flex flex-col justify-between"
-              >
-                <CardHeader className="space-y-3 pb-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="text-3xl p-2 bg-primary/10 rounded-2xl border border-primary/20">
-                        {dept.icon}
-                      </div>
-                      <div>
-                        <CardTitle className="text-xl font-bold text-foreground">
-                          {dept.name}
-                        </CardTitle>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-[11px] font-normal">
-                            <UserCheckIcon className="size-3 mr-1 text-primary" />
-                            {dept.leadSpecialist}
-                          </Badge>
-                          {dept.emergencyAvailable && (
-                            <Badge className="bg-red-500/10 text-red-400 border-red-500/20 text-[10px]">
-                              24/7 On-Call
+            {filteredDepartments.map((dept) => {
+              const DeptIcon = dept.icon;
+              return (
+                <Card
+                  key={dept.id}
+                  className="border border-border/80 bg-card/80 backdrop-blur-sm hover:border-primary/40 transition-all duration-300 shadow-sm flex flex-col justify-between"
+                >
+                  <CardHeader className="space-y-3 pb-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 bg-primary/10 rounded-2xl border border-primary/20 text-primary shrink-0">
+                          <DeptIcon className="size-6" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl font-bold text-foreground">
+                            {dept.name}
+                          </CardTitle>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="text-[11px] font-normal">
+                              <UserCheckIcon className="size-3 mr-1 text-primary" />
+                              {dept.leadSpecialist}
                             </Badge>
-                          )}
+                            {dept.emergencyAvailable && (
+                              <Badge className="bg-red-500/10 text-red-400 border-red-500/20 text-[10px]">
+                                24/7 On-Call
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {dept.description}
-                  </p>
-                  <p className="text-[11px] text-primary/80 font-mono">
-                    {dept.qualification}
-                  </p>
-                </CardHeader>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {dept.description}
+                    </p>
+                    <p className="text-[11px] text-primary/80 font-mono">
+                      {dept.qualification}
+                    </p>
+                  </CardHeader>
 
-                <CardContent className="space-y-5 pt-0">
-                  {/* PROCEDURES TABLE */}
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Common Clinical Procedures & Fees
-                    </h4>
+                  <CardContent className="space-y-5 pt-0">
                     <div className="space-y-2">
-                      {dept.procedures.map((proc, i) => (
-                        <div
-                          key={i}
-                          className="p-3 rounded-xl bg-muted/20 border border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
-                        >
-                          <div className="space-y-0.5">
-                            <span className="font-semibold text-foreground">
-                              {proc.name}
-                            </span>
-                            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <ClockIcon className="size-3" />
-                                {proc.duration}
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Common Clinical Procedures & Fees
+                      </h4>
+                      <div className="space-y-2">
+                        {dept.procedures.map((proc, i) => (
+                          <div
+                            key={i}
+                            className="p-3 rounded-xl bg-muted/20 border border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                          >
+                            <div className="space-y-0.5">
+                              <span className="font-semibold text-foreground">
+                                {proc.name}
                               </span>
-                              <span>• Anesthesia: {proc.anesthesia}</span>
-                              <span>• Recovery: {proc.recovery}</span>
+                              <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <ClockIcon className="size-3" />
+                                  {proc.duration}
+                                </span>
+                                <span>• Anesthesia: {proc.anesthesia}</span>
+                                <span>• Recovery: {proc.recovery}</span>
+                              </div>
+                            </div>
+                            <div className="text-right sm:shrink-0 font-mono font-bold text-primary text-sm">
+                              {proc.price}
                             </div>
                           </div>
-                          <div className="text-right sm:shrink-0 font-mono font-bold text-primary text-sm">
-                            {proc.price}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* PREPARATION GUIDELINES */}
-                  <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/10 space-y-1.5">
-                    <div className="text-[11px] font-semibold text-primary flex items-center gap-1">
-                      <SparklesIcon className="size-3.5" />
-                      <span>Pre-Procedure Preparation Protocol</span>
-                    </div>
-                    <ul className="space-y-1 text-[11px] text-muted-foreground">
-                      {dept.prepGuidelines.map((guideline, gIdx) => (
-                        <li key={gIdx} className="flex items-start gap-1.5">
-                          <span className="text-primary font-bold">•</span>
-                          <span>{guideline}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* ACTION BAR */}
-                  <div className="pt-2 flex items-center justify-between border-t border-border/60">
-                    <div className="text-[11px] text-muted-foreground">
-                      {dept.insuranceCovered ? (
-                        <span className="text-green-500 font-medium">
-                          ✓ Eligible for PPO Insurance Claims
-                        </span>
-                      ) : (
-                        <span>Self-Pay / Flexible Installments</span>
-                      )}
+                        ))}
+                      </div>
                     </div>
 
-                    <Link href="/appointments">
-                      <Button
-                        size="sm"
-                        className="bg-primary hover:bg-primary/90 text-white font-medium text-xs rounded-xl"
-                      >
-                        <CalendarIcon className="size-3.5 mr-1.5" />
-                        Book This Department
-                        <ArrowRightIcon className="size-3.5 ml-1" />
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/10 space-y-1.5">
+                      <div className="text-[11px] font-semibold text-primary flex items-center gap-1">
+                        <SparklesIcon className="size-3.5" />
+                        <span>Pre-Procedure Preparation Protocol</span>
+                      </div>
+                      <ul className="space-y-1 text-[11px] text-muted-foreground">
+                        {dept.prepGuidelines.map((guideline, gIdx) => (
+                          <li key={gIdx} className="flex items-start gap-1.5">
+                            <span className="text-primary font-bold">•</span>
+                            <span>{guideline}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="pt-2 flex items-center justify-between border-t border-border/60">
+                      <div className="text-[11px] text-muted-foreground">
+                        {dept.insuranceCovered ? (
+                          <span className="text-emerald-500 font-medium inline-flex items-center gap-1">
+                            <CheckCircle2Icon className="size-3.5" />
+                            Eligible for PPO Insurance Claims
+                          </span>
+                        ) : (
+                          <span>Self-Pay / Flexible Installments</span>
+                        )}
+                      </div>
+
+                      <Link href="/appointments">
+                        <Button
+                          size="sm"
+                          className="bg-primary hover:bg-primary/90 text-white font-medium text-xs rounded-xl"
+                        >
+                          <CalendarIcon className="size-3.5 mr-1.5" />
+                          Book This Department
+                          <ArrowRightIcon className="size-3.5 ml-1" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           {filteredDepartments.length === 0 && (

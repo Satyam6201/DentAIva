@@ -607,7 +607,7 @@ export default function RecordsPage() {
             {/* CLINICAL ALLERGIES WARNING */}
             <div className="p-3 border-2 border-dashed border-red-500 rounded-lg text-xs space-y-1">
               <span className="font-bold text-red-600 block uppercase">
-                ⚠️ Medical Alerts / Drug Allergies
+                Medical Alerts / Drug Allergies
               </span>
               <p className="text-gray-700">
                 {allergies.join(", ") || "No known drug allergies reported."}
