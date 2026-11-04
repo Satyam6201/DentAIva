@@ -20,25 +20,118 @@ export const FEMALE_DOCTOR_AVATARS = [
   "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=256&auto=format&fit=crop&q=80",
 ];
 
-export function generateAvatar(name: string, gender: "MALE" | "FEMALE" = "MALE") {
+export const ALL_DOCTOR_AVATARS = [
+  ...MALE_DOCTOR_AVATARS,
+  ...FEMALE_DOCTOR_AVATARS,
+];
+
+/**
+ * Returns a doctor avatar, ensuring uniqueness when usedUrls or an index is provided.
+ */
+export function generateAvatar(
+  name: string = "Doctor",
+  gender: "MALE" | "FEMALE" = "MALE",
+  usedUrls?: Iterable<string> | number
+): string {
+  const avatarList =
+    gender === "FEMALE" ? FEMALE_DOCTOR_AVATARS : MALE_DOCTOR_AVATARS;
+
+  if (typeof usedUrls === "number") {
+    return avatarList[Math.abs(usedUrls) % avatarList.length];
+  }
+
   const hash = Math.abs(
     name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
   );
-  if (gender === "FEMALE") {
-    return FEMALE_DOCTOR_AVATARS[hash % FEMALE_DOCTOR_AVATARS.length];
+
+  if (usedUrls) {
+    const usedSet = usedUrls instanceof Set ? usedUrls : new Set(usedUrls);
+    const available = avatarList.filter((url) => !usedSet.has(url));
+    if (available.length > 0) {
+      return available[hash % available.length];
+    }
   }
-  return MALE_DOCTOR_AVATARS[hash % MALE_DOCTOR_AVATARS.length];
+
+  return avatarList[hash % avatarList.length];
 }
 
+/**
+ * Validates and sanitizes a doctor avatar URL, falling back to a safe unique avatar.
+ */
 export function getSafeAvatarUrl(
   url?: string | null,
   name: string = "Doctor",
-  gender: "MALE" | "FEMALE" = "MALE"
-) {
-  if (!url || url.includes("iran.liara") || url.includes("avatar.iran")) {
-    return generateAvatar(name, gender);
+  gender: "MALE" | "FEMALE" = "MALE",
+  usedUrls?: Iterable<string>
+): string {
+  if (
+    !url ||
+    typeof url !== "string" ||
+    url.includes("iran.liara") ||
+    url.includes("avatar.iran")
+  ) {
+    return generateAvatar(name, gender, usedUrls);
   }
+
+  if (usedUrls) {
+    const usedSet = usedUrls instanceof Set ? usedUrls : new Set(usedUrls);
+    if (usedSet.has(url)) {
+      return generateAvatar(name, gender, usedSet);
+    }
+  }
+
   return url;
+}
+
+/**
+ * Guarantees that every doctor in the given array has a unique avatar.
+ * Eliminates duplicate avatars across clinical rosters and appointment pickers.
+ */
+export function assignUniqueDoctorAvatars<
+  T extends {
+    id?: string;
+    name: string;
+    gender?: string | null;
+    imageUrl?: string | null;
+  }
+>(doctors: T[]): (T & { imageUrl: string })[] {
+  const usedAvatars = new Set<string>();
+
+  return doctors.map((doctor, index) => {
+    const gender: "MALE" | "FEMALE" =
+      doctor.gender === "FEMALE" ? "FEMALE" : "MALE";
+    const avatarList =
+      gender === "FEMALE" ? FEMALE_DOCTOR_AVATARS : MALE_DOCTOR_AVATARS;
+
+    let chosenUrl: string;
+
+    if (
+      doctor.imageUrl &&
+      avatarList.includes(doctor.imageUrl) &&
+      !usedAvatars.has(doctor.imageUrl)
+    ) {
+      chosenUrl = doctor.imageUrl;
+    } else {
+      const available = avatarList.filter((url) => !usedAvatars.has(url));
+      if (available.length > 0) {
+        const hash = Math.abs(
+          doctor.name
+            .split("")
+            .reduce((acc, char) => acc + char.charCodeAt(0), 0) + index
+        );
+        chosenUrl = available[hash % available.length];
+      } else {
+        chosenUrl = avatarList[index % avatarList.length];
+      }
+    }
+
+    usedAvatars.add(chosenUrl);
+
+    return {
+      ...doctor,
+      imageUrl: chosenUrl,
+    };
+  });
 }
 
 // Phone formatting function for US numbers

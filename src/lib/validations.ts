@@ -17,12 +17,21 @@ export const BookAppointmentSchema = z.object({
     .transform((val) => val?.trim() || "General consultation"),
 });
 
+export const DoctorAvatarUrlSchema = z
+  .string()
+  .url("Invalid avatar URL format")
+  .refine(
+    (url) => !url.includes("iran.liara") && !url.includes("avatar.iran"),
+    { message: "Legacy avatar provider is not supported" }
+  );
+
 export const CreateDoctorSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().trim().email("Invalid official email address").max(120),
   phone: z.string().trim().min(5, "Phone number is too short").max(30),
   speciality: z.string().trim().min(2, "Speciality is required").max(100),
   gender: z.enum(["MALE", "FEMALE"]),
+  imageUrl: DoctorAvatarUrlSchema.optional(),
   isActive: z.boolean().default(true),
 });
 
