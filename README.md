@@ -2,6 +2,9 @@
 
 # DentAIva — AI-Powered Dental Hospital & Clinic SaaS
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-dentaive--ai.vercel.app-00C7B7?style=for-the-badge&logo=vercel)](https://dentaive-ai.vercel.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Satyam6201%2FDentAIva-181717?style=for-the-badge&logo=github)](https://github.com/Satyam6201/DentAIva)
+
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.1.4-blue?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -14,10 +17,14 @@
 
 > **DentAIva** is an enterprise-grade, full-stack **Dental Hospital Management Platform and SaaS** engineered to streamline patient care, electronic health records (EHR), dynamic double-booking-free scheduling, 24/7 dental trauma emergency triage, post-operative surgical aftercare, and real-time AI voice consultations.
 
+* **Live Demo**: [https://dentaive-ai.vercel.app/](https://dentaive-ai.vercel.app/)
+* **GitHub Repository**: [https://github.com/Satyam6201/DentAIva](https://github.com/Satyam6201/DentAIva)
+
 ---
 
 ## Table of Contents
 
+- [Deployment & Quick Links](#deployment--quick-links)
 - [Highlights](#highlights)
 - [System Architecture & How It Works](#system-architecture--how-it-works)
   - [1. High-Level System Architecture](#1-high-level-system-architecture)
@@ -43,6 +50,15 @@
   - [4. Run Local Development Server](#4-run-local-development-server)
 - [Available Scripts](#available-scripts)
 - [License](#license)
+
+---
+
+## Deployment & Quick Links
+
+| Platform | Link | Description |
+|---|---|---|
+| **Live Production** | [https://dentaive-ai.vercel.app/](https://dentaive-ai.vercel.app/) | Deployed on Vercel with serverless edge functions |
+| **Source Repository** | [https://github.com/Satyam6201/DentAIva](https://github.com/Satyam6201/DentAIva) | GitHub source repository |
 
 ---
 
