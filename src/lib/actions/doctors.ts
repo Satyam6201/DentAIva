@@ -2,7 +2,10 @@
 
 import { Gender, Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
-import { generateAvatar, getSafeAvatarUrl } from "../utils";
+import {
+  generateAvatar,
+  assignUniqueDoctorAvatars,
+} from "../utils";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "../auth";
 import { CreateDoctorSchema, UpdateDoctorSchema } from "../validations";
@@ -16,11 +19,12 @@ export async function getDoctors() {
       orderBy: { createdAt: "desc" },
     });
 
-    return doctors.map((doctor) => ({
+    const withCount = doctors.map((doctor) => ({
       ...doctor,
-      imageUrl: getSafeAvatarUrl(doctor.imageUrl, doctor.name, doctor.gender),
       appointmentCount: doctor._count.appointments,
     }));
+
+    return assignUniqueDoctorAvatars(withCount);
   } catch (error) {
     console.error("Error fetching doctors:", error);
     throw new Error("Failed to fetch doctors list");
@@ -33,11 +37,12 @@ interface CreateDoctorInput {
   phone: string;
   speciality: string;
   gender: Gender;
+  imageUrl?: string;
   isActive: boolean;
 }
 
 /**
- * Creates a new clinical doctor profile.
+ * Creates a new clinical doctor profile with a guaranteed unique avatar.
  * Protected: Requires Administrator privileges.
  */
 export async function createDoctor(input: CreateDoctorInput) {
@@ -45,6 +50,18 @@ export async function createDoctor(input: CreateDoctorInput) {
     await requireAdmin();
 
     const validated = CreateDoctorSchema.parse(input);
+
+    // Query existing doctors of this gender to assign a guaranteed unique avatar
+    const existingDoctors = await prisma.doctor.findMany({
+      where: { gender: validated.gender },
+      select: { imageUrl: true },
+    });
+    const usedUrls = new Set(existingDoctors.map((d) => d.imageUrl));
+
+    const assignedAvatar =
+      validated.imageUrl && !usedUrls.has(validated.imageUrl)
+        ? validated.imageUrl
+        : generateAvatar(validated.name, validated.gender, usedUrls);
 
     const doctor = await prisma.doctor.create({
       data: {
@@ -54,7 +71,7 @@ export async function createDoctor(input: CreateDoctorInput) {
         speciality: validated.speciality,
         gender: validated.gender,
         isActive: validated.isActive,
-        imageUrl: generateAvatar(validated.name, validated.gender),
+        imageUrl: assignedAvatar,
       },
     });
 
@@ -66,7 +83,10 @@ export async function createDoctor(input: CreateDoctorInput) {
   } catch (error: any) {
     console.error("Error creating doctor:", error);
 
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
       throw new Error("A doctor with this email address already exists.");
     }
 
@@ -90,7 +110,7 @@ export async function updateDoctor(input: UpdateDoctorInput) {
 
     const currentDoctor = await prisma.doctor.findUnique({
       where: { id: validated.id },
-      select: { id: true, email: true },
+      select: { id: true, email: true, gender: true, imageUrl: true },
     });
 
     if (!currentDoctor) {
@@ -109,6 +129,25 @@ export async function updateDoctor(input: UpdateDoctorInput) {
       }
     }
 
+    // Determine if avatar needs update (e.g. if new imageUrl specified or gender changed)
+    let newImageUrl = validated.imageUrl;
+    if (
+      !newImageUrl &&
+      validated.gender &&
+      validated.gender !== currentDoctor.gender
+    ) {
+      const existingDoctors = await prisma.doctor.findMany({
+        where: { gender: validated.gender, NOT: { id: validated.id } },
+        select: { imageUrl: true },
+      });
+      const usedUrls = new Set(existingDoctors.map((d) => d.imageUrl));
+      newImageUrl = generateAvatar(
+        validated.name || "Doctor",
+        validated.gender,
+        usedUrls
+      );
+    }
+
     const doctor = await prisma.doctor.update({
       where: { id: validated.id },
       data: {
@@ -117,7 +156,10 @@ export async function updateDoctor(input: UpdateDoctorInput) {
         ...(validated.phone && { phone: validated.phone }),
         ...(validated.speciality && { speciality: validated.speciality }),
         ...(validated.gender && { gender: validated.gender }),
-        ...(validated.isActive !== undefined && { isActive: validated.isActive }),
+        ...(validated.isActive !== undefined && {
+          isActive: validated.isActive,
+        }),
+        ...(newImageUrl && { imageUrl: newImageUrl }),
       },
     });
 
@@ -133,7 +175,7 @@ export async function updateDoctor(input: UpdateDoctorInput) {
 }
 
 /**
- * Fetches only active doctors for the appointment scheduling interface.
+ * Fetches only active doctors with guaranteed unique avatars for appointment scheduling.
  * Uses the @@index([isActive]) index for high concurrency performance.
  */
 export async function getAvailableDoctors() {
@@ -148,11 +190,12 @@ export async function getAvailableDoctors() {
       orderBy: { name: "asc" },
     });
 
-    return doctors.map((doctor) => ({
+    const withCount = doctors.map((doctor) => ({
       ...doctor,
-      imageUrl: getSafeAvatarUrl(doctor.imageUrl, doctor.name, doctor.gender),
       appointmentCount: doctor._count.appointments,
     }));
+
+    return assignUniqueDoctorAvatars(withCount);
   } catch (error) {
     console.error("Error fetching available doctors:", error);
     throw new Error("Failed to fetch available doctors");
