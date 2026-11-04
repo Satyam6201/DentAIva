@@ -39,7 +39,7 @@ function Navbar() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background/95 backdrop-blur-md border-b border-border/80">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
-          {/* LEFT: BRAND LOGO */}
+
           <Link href="/dashboard" className="flex items-center gap-2.5 shrink-0">
             <Image
               src="/logo.png"
@@ -56,7 +56,7 @@ function Navbar() {
             </span>
           </Link>
 
-          {/* CENTER: DESKTOP NAVIGATION (CLEAN TEXT-FIRST LINKS) */}
+
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -76,7 +76,7 @@ function Navbar() {
             })}
           </nav>
 
-          {/* RIGHT: EMERGENCY TRIAGE & USER PROFILE */}
+
           <div className="flex items-center gap-3">
             <Button
               size="sm"
@@ -103,7 +103,7 @@ function Navbar() {
               <UserButton afterSignOutUrl="/" />
             </div>
 
-            {/* MOBILE MENU TOGGLE */}
+
             <Button
               variant="ghost"
               size="sm"
@@ -120,7 +120,7 @@ function Navbar() {
           </div>
         </div>
 
-        {/* MOBILE DROPDOWN */}
+
         {mobileMenuOpen && (
           <div className="md:hidden fixed top-16 left-0 right-0 bg-background/98 backdrop-blur-xl border-b border-border p-4 shadow-xl animate-in slide-in-from-top-2">
             <div className="grid grid-cols-2 gap-2">

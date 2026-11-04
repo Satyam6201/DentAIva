@@ -97,8 +97,8 @@ function AppointmentsPage() {
       <Navbar />
 
       <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* HEADER STRIP */}
+        <div className="max-w-6xl mx-auto space-y-8">
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-2">
@@ -158,7 +158,7 @@ function AppointmentsPage() {
             />
           )}
 
-          {/* EXISTING SCHEDULED APPOINTMENTS */}
+
           {userAppointments.length > 0 && (
             <div className="pt-6 border-t border-border/70 space-y-4">
               <div className="flex items-center justify-between">

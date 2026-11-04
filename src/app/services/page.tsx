@@ -168,7 +168,7 @@ export default function ServicesPage() {
 
       <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto space-y-8">
-          {/* PAGE TITLE & SUBTITLE */}
+
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
               Clinical Departments & Specialties
@@ -178,7 +178,7 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          {/* SEARCH & FILTER CONTROLS */}
+
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="relative w-full sm:w-72">
               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
@@ -219,7 +219,7 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* CLEAN 3-COLUMN DEPARTMENT GRID */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredDepartments.map((dept) => {
               const DeptIcon = dept.icon;
@@ -229,7 +229,7 @@ export default function ServicesPage() {
                   className="border border-border/80 bg-card rounded-xl hover:border-primary/40 transition-all shadow-xs flex flex-col justify-between"
                 >
                   <CardContent className="p-5 space-y-4">
-                    {/* CARD HEADER */}
+
                     <div className="flex items-start justify-between gap-3">
                       <div className="size-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
                         <DeptIcon className="size-5" />
@@ -254,7 +254,7 @@ export default function ServicesPage() {
                       {dept.description}
                     </p>
 
-                    {/* PROCEDURES TABLE / LIST (CLEAN, BORDERLESS) */}
+
                     <div className="pt-2 border-t border-border/50 space-y-1.5">
                       <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground block">
                         Common Procedures
@@ -273,7 +273,7 @@ export default function ServicesPage() {
                       </div>
                     </div>
 
-                    {/* ACTION BUTTON */}
+
                     <Link href="/appointments" className="block pt-2">
                       <Button
                         size="sm"

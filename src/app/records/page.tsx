@@ -160,8 +160,8 @@ export default function RecordsPage() {
       <Navbar />
 
       <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* HEADER STRIP */}
+        <div className="max-w-6xl mx-auto space-y-6">
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-2">
@@ -185,9 +185,9 @@ export default function RecordsPage() {
             </Button>
           </div>
 
-          {/* TOP 2-CARD GRID: PROFILE & MEDICAL ALERTS */}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* DIGITAL PATIENT CARD */}
+
             <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
               <CardHeader className="p-5 pb-3">
                 <div className="flex items-center justify-between">
@@ -249,7 +249,7 @@ export default function RecordsPage() {
               </CardContent>
             </Card>
 
-            {/* MEDICAL ALERTS & CONDITIONS */}
+
             <Card className="border border-red-500/30 bg-card/90 rounded-2xl shadow-xs md:col-span-2">
               <CardHeader className="p-5 pb-3">
                 <div className="flex items-center justify-between">
@@ -266,7 +266,7 @@ export default function RecordsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-5 pt-0 space-y-3.5 text-xs">
-                {/* ALLERGIES */}
+
                 <div className="space-y-1.5">
                   <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                     Known Allergies ({allergies.length}):
@@ -310,7 +310,7 @@ export default function RecordsPage() {
                   </div>
                 </div>
 
-                {/* SYSTEMIC CONDITIONS */}
+
                 <div className="space-y-1.5 pt-2 border-t border-border/40">
                   <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                     Medical Conditions:
@@ -357,7 +357,7 @@ export default function RecordsPage() {
             </Card>
           </div>
 
-          {/* ACTIVE PRESCRIPTIONS */}
+
           <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
             <CardHeader className="p-5 pb-3">
               <div className="flex items-center justify-between">
@@ -411,7 +411,7 @@ export default function RecordsPage() {
             </CardContent>
           </Card>
 
-          {/* CLINICAL TREATMENT HISTORY */}
+
           <Card className="border border-border/80 bg-card/90 rounded-2xl shadow-xs">
             <CardHeader className="p-5 pb-3">
               <div className="flex items-center justify-between">
@@ -518,7 +518,7 @@ export default function RecordsPage() {
           </Card>
         </div>
 
-        {/* PRINTABLE HOSPITAL CLINIC PASS */}
+
         <div className="hidden print:block print:p-8 print:bg-white print:text-black">
           <div className="border-2 border-black p-6 rounded-xl max-w-xl mx-auto space-y-4">
             <div className="flex items-center justify-between border-b-2 border-black pb-3">

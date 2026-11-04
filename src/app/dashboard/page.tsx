@@ -10,11 +10,13 @@ function DashboardPage() {
     <>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
-        <WelcomeSection />
-        <MainActions />
-        <ActivityOverview />
-      </div>
+      <main className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <WelcomeSection />
+          <MainActions />
+          <ActivityOverview />
+        </div>
+      </main>
     </>
   );
 }
