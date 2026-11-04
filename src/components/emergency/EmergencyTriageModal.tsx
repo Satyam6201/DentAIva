@@ -11,14 +11,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  AlertTriangleIcon,
-  PhoneCallIcon,
+  PhoneIcon,
   ClockIcon,
   CheckCircle2Icon,
-  ArrowRightIcon,
-  HeartPulseIcon,
   ShieldAlertIcon,
-  MessageSquareIcon,
+  ArrowRightIcon,
+  MicIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,6 +27,108 @@ interface EmergencyTriageModalProps {
 
 type EmergencyCategory = "critical" | "urgent" | "moderate";
 
+interface TriageTier {
+  id: EmergencyCategory;
+  label: string;
+  badge: string;
+  badgeColor: string;
+  activeColor: string;
+  timeWindow: string;
+  title: string;
+  summary: string;
+  steps: { action: string; detail: string }[];
+}
+
+const TRIAGE_TIERS: Record<EmergencyCategory, TriageTier> = {
+  critical: {
+    id: "critical",
+    label: "Critical",
+    badge: "Level 1: Immediate Trauma",
+    badgeColor: "bg-red-500/10 text-red-500 border-red-500/20",
+    activeColor: "bg-red-600 text-white shadow-xs",
+    timeWindow: "Within 30–60 minutes",
+    title: "Knocked-Out Tooth, Trauma, or Severe Bleeding",
+    summary:
+      "Rapid intervention required to preserve permanent teeth and prevent complications.",
+    steps: [
+      {
+        action: "Handle Crown Only",
+        detail: "Never touch the root. Rinse gently with milk or saline if dirty; do not scrub.",
+      },
+      {
+        action: "Preserve Tooth",
+        detail: "Attempt reinserting into the socket, or submerge in cold milk or clean saliva.",
+      },
+      {
+        action: "Firm Pressure",
+        detail: "Bite down on sterile gauze or a moist tea bag continuously for 20 minutes.",
+      },
+      {
+        action: "Monitor Breathing",
+        detail: "If swelling impairs swallowing or airflow, contact 911 immediately.",
+      },
+    ],
+  },
+  urgent: {
+    id: "urgent",
+    label: "Urgent",
+    badge: "Level 2: Urgent Care",
+    badgeColor: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+    activeColor: "bg-amber-600 text-white shadow-xs",
+    timeWindow: "Same-Day (12–24h)",
+    title: "Acute Severe Toothache, Abscess, or Pulp Exposure",
+    summary:
+      "Intense throbbing pain, localized swelling, or broken teeth needing same-day evaluation.",
+    steps: [
+      {
+        action: "Warm Salt Rinse",
+        detail: "Rinse mouth with warm water (1/2 tsp salt in 8 oz water) to clear debris.",
+      },
+      {
+        action: "Pain Management",
+        detail: "Take approved oral pain medication. Never apply aspirin directly to gums.",
+      },
+      {
+        action: "Protect Exposed Nerve",
+        detail: "Cover sharp edges or cavity openings with dental wax or sugar-free gum.",
+      },
+      {
+        action: "Cold Compress",
+        detail: "Apply ice pack to the outer cheek in 15-minute intervals to reduce pain.",
+      },
+    ],
+  },
+  moderate: {
+    id: "moderate",
+    label: "Moderate",
+    badge: "Level 3: Semi-Urgent",
+    badgeColor: "bg-primary/10 text-primary border-primary/20",
+    activeColor: "bg-primary text-primary-foreground shadow-xs",
+    timeWindow: "24–48 Hours",
+    title: "Lost Filling, Dislodged Crown, or Chipped Tooth",
+    summary:
+      "Manageable discomfort or cosmetic fractures requiring routine clinical restoration.",
+    steps: [
+      {
+        action: "Temporary Seal",
+        detail: "Place over-the-counter dental cement or temporary filling into cavity opening.",
+      },
+      {
+        action: "Secure Loose Crown",
+        detail: "Coat interior with toothpaste or temporary cement and slip gently over tooth.",
+      },
+      {
+        action: "Avoid Triggers",
+        detail: "Avoid hot, cold, acidic, or crunchy foods on the affected side.",
+      },
+      {
+        action: "Gentle Floss",
+        detail: "Carefully floss around the area to dislodge food particles without pulling.",
+      },
+    ],
+  },
+};
+
 export default function EmergencyTriageModal({
   open,
   onOpenChange,
@@ -36,202 +136,150 @@ export default function EmergencyTriageModal({
   const [selectedCategory, setSelectedCategory] =
     useState<EmergencyCategory>("critical");
 
-  const triageData = {
-    critical: {
-      badge: "Level 1 - Immediate Trauma / Critical",
-      badgeColor: "bg-red-500/10 text-red-500 border-red-500/20",
-      title: "Knocked-Out Tooth / Severe Bleeding / Facial Swelling",
-      description:
-        "High urgency. Immediate clinical intervention required within 30–60 minutes to save the tooth or prevent airway obstruction.",
-      protocols: [
-        "Knocked-Out Tooth: Hold by the crown ONLY (never the root). Gently rinse with milk or saline if dirty. Do NOT scrub.",
-        "Tooth Preservation: Try inserting tooth back into socket, or store submerged in cold whole milk or saliva in a clean container.",
-        "Uncontrolled Bleeding: Bite firmly on a clean gauze pad or moistened black tea bag for 30 minutes without lifting.",
-        "Facial Swelling: Apply cold compress to outside of cheek (15 min on / 15 min off). If swallowing or breathing is impaired, call 911 immediately.",
-      ],
-      recommendedAction: "Call Emergency Dental Trauma Hotline Immediately",
-    },
-    urgent: {
-      badge: "Level 2 - Urgent Care",
-      badgeColor: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-      title: "Acute Severe Toothache / Abscess / Broken Tooth",
-      description:
-        "Moderate to severe pain, visible dental pulp, or localized gum boil. Same-day clinical treatment recommended.",
-      protocols: [
-        "Pain Relief: Rinse with lukewarm salt water (1/2 tsp salt in 8 oz water).",
-        "Medication: Take Ibuprofen (400-600mg) as packaging directs if medically cleared. NEVER place an aspirin tablet directly on gums.",
-        "Broken Tooth: Rinse mouth with warm water, save any tooth fragments in saline, apply orthodontic wax to sharp edges.",
-        "Dental Abscess: Do not attempt to pop or squeeze a gum boil. Avoid hot beverages and chew on the unaffected side.",
-      ],
-      recommendedAction: "Book Same-Day Emergency Appointment",
-    },
-    moderate: {
-      badge: "Level 3 - Semi-Urgent / Discomfort",
-      badgeColor: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-      title: "Lost Filling / Broken Crown / Mild Sensitivity",
-      description:
-        "Manageable pain or cosmetic disruption. Care needed within 24 to 48 hours to prevent further decay or nerve irritation.",
-      protocols: [
-        "Lost Crown: Coat inner crown with OTC dental cement or toothpaste and gently slip over the tooth to protect nerve.",
-        "Lost Filling: Place temporary dental filling material (available at pharmacies) into cavity to block food debris.",
-        "Temperature Sensitivity: Use sensitive toothpaste (potassium nitrate), avoid ice-cold or piping hot foods.",
-        "Food Impaction: Gently use dental floss. Do not use toothpicks or sharp metal objects.",
-      ],
-      recommendedAction: "Consult AI Assistant or Schedule Next Available Visit",
-    },
-  };
-
-  const current = triageData[selectedCategory];
+  const current = TRIAGE_TIERS[selectedCategory];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-md border-border p-6 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div className="size-9 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+      <DialogContent className="max-w-xl bg-card border-border/80 p-5 sm:p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-1.5 pb-1">
+          <div className="flex items-center gap-3">
+            <div className="size-9 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0">
               <ShieldAlertIcon className="size-5 text-red-500" />
             </div>
             <div>
-              <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                24/7 Dental Emergency & Triage Guide
+              <DialogTitle className="text-lg sm:text-xl font-bold tracking-tight">
+                Dental Emergency Triage
               </DialogTitle>
-              <DialogDescription className="text-xs">
-                Clinical triage protocols approved for instant dental trauma care
+              <DialogDescription className="text-xs text-muted-foreground">
+                Clinical first-aid protocols for immediate dental trauma and acute pain
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
         {/* Category Selector Tabs */}
-        <div className="grid grid-cols-3 gap-2 p-1 bg-muted/40 rounded-xl mt-2">
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("critical")}
-            className={`py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
-              selectedCategory === "critical"
-                ? "bg-red-500 text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Level 1: Critical
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("urgent")}
-            className={`py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
-              selectedCategory === "urgent"
-                ? "bg-amber-500 text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Level 2: Urgent
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("moderate")}
-            className={`py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
-              selectedCategory === "moderate"
-                ? "bg-primary text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Level 3: Moderate
-          </button>
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-muted/30 border border-border/60 rounded-xl">
+          {(["critical", "urgent", "moderate"] as EmergencyCategory[]).map(
+            (category) => {
+              const tier = TRIAGE_TIERS[category];
+              const isActive = selectedCategory === category;
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setSelectedCategory(category)}
+                  className={`py-2 px-3 text-xs font-semibold rounded-lg transition-all duration-200 select-none ${
+                    isActive
+                      ? tier.activeColor
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                  }`}
+                >
+                  {tier.label}
+                </button>
+              );
+            }
+          )}
         </div>
 
-        {/* Selected Protocol Details */}
-        <div className="space-y-4 pt-2">
-          <div className="p-4 rounded-xl border bg-muted/20 space-y-2">
-            <div className="flex items-center justify-between">
+        {/* Selected Protocol Content with Smooth Fade-in */}
+        <div
+          key={selectedCategory}
+          className="space-y-3.5 animate-in fade-in-50 slide-in-from-bottom-1 duration-200"
+        >
+          {/* Header Card */}
+          <div className="p-4 rounded-xl border border-border/70 bg-muted/20 space-y-1.5">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <Badge className={current.badgeColor} variant="outline">
                 {current.badge}
               </Badge>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <ClockIcon className="size-3.5" />
-                <span>Critical Response Window</span>
-              </div>
+              <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+                <ClockIcon className="size-3 text-muted-foreground" />
+                Response: {current.timeWindow}
+              </span>
             </div>
-            <h3 className="font-bold text-base text-foreground">
+            <h3 className="font-bold text-sm sm:text-base text-foreground leading-snug">
               {current.title}
             </h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              {current.description}
+              {current.summary}
             </p>
           </div>
 
+          {/* First-Aid Steps */}
           <div className="space-y-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <HeartPulseIcon className="size-4 text-primary" />
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Immediate Clinical First-Aid Steps
-            </h4>
-            <div className="space-y-2">
-              {current.protocols.map((protocol, idx) => (
+            </p>
+            <div className="space-y-1.5">
+              {current.steps.map((step, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-2.5 p-3 rounded-lg bg-card border border-border/70 text-xs text-foreground"
+                  className="flex items-start gap-2.5 p-2.5 rounded-lg bg-card border border-border/60 text-xs"
                 >
-                  <CheckCircle2Icon className="size-4 text-primary shrink-0 mt-0.5" />
-                  <span className="leading-relaxed">{protocol}</span>
+                  <CheckCircle2Icon className="size-3.5 text-primary shrink-0 mt-0.5" />
+                  <div className="leading-relaxed">
+                    <span className="font-semibold text-foreground">
+                      {step.action}:{" "}
+                    </span>
+                    <span className="text-muted-foreground">{step.detail}</span>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Action Hotline & Booking */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-red-500/10 via-primary/5 to-transparent border border-red-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="space-y-1 text-center sm:text-left">
-              <div className="text-xs font-medium text-red-400 flex items-center justify-center sm:justify-start gap-1">
-                <AlertTriangleIcon className="size-3.5" />
-                <span>Hospital Emergency Trauma Desk</span>
+          {/* Emergency Hotline & Actions */}
+          <div className="p-3.5 rounded-xl bg-red-500/5 border border-red-500/15 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="text-center sm:text-left space-y-0.5">
+              <div className="text-[11px] font-semibold text-red-500">
+                24/7 Dental Trauma Hotline
               </div>
-              <div className="text-lg font-bold text-foreground font-mono">
+              <div className="text-base font-bold font-mono text-foreground">
                 +1 (800) 433-6824
-              </div>
-              <div className="text-[11px] text-muted-foreground">
-                Available 24 hours / 7 days a week including public holidays
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <a
                 href="tel:18004336824"
-                className="w-full sm:w-auto"
+                className="flex-1 sm:flex-initial"
               >
                 <Button
                   size="sm"
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs shadow-md"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs shadow-xs h-8.5 px-3.5"
                 >
-                  <PhoneCallIcon className="size-3.5 mr-1.5" />
-                  Call Hotline
+                  <PhoneIcon className="size-3.5 mr-1.5" />
+                  Call Now
                 </Button>
               </a>
 
               <Link
                 href="/appointments"
                 onClick={() => onOpenChange(false)}
-                className="w-full sm:w-auto"
+                className="flex-1 sm:flex-initial"
               >
                 <Button
                   size="sm"
                   variant="outline"
-                  className="w-full border-primary/30 hover:bg-primary/10 text-xs"
+                  className="w-full text-xs h-8.5 px-3.5 border-border hover:bg-muted"
                 >
-                  Book Emergency Visit
-                  <ArrowRightIcon className="size-3.5 ml-1.5" />
+                  Book Slot
+                  <ArrowRightIcon className="size-3.5 ml-1" />
                 </Button>
               </Link>
             </div>
           </div>
 
+          {/* Footer Info */}
           <div className="flex items-center justify-between pt-1 border-t border-border/60 text-[11px] text-muted-foreground">
-            <span>Hospital Registration No: DENT-TX-90210</span>
+            <span>Hospital Triage ID: DENT-TX-90210</span>
             <Link
               href="/voice"
               onClick={() => onOpenChange(false)}
-              className="text-primary hover:underline flex items-center gap-1 font-medium"
+              className="text-primary hover:underline flex items-center gap-1 font-medium transition-colors"
             >
-              <MessageSquareIcon className="size-3" />
-              Speak to AI Dental Assistant
+              <MicIcon className="size-3" />
+              Speak to AI Assistant
             </Link>
           </div>
         </div>
